@@ -8,6 +8,8 @@ import {connectedDatabase} from './config/dbConnect.js'
 const app = express();
 
 connectedDatabase();
+
+app.use(express.json())
 app.use('/api/v1', productRoutes)
 
 
