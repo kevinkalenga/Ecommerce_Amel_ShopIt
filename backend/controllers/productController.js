@@ -1,9 +1,4 @@
 import Product from "../models/productModel.js"
-export const getProducts = async (req, res) => {
-    res.status(200).json({
-        message:"Tous les produits"
-    })
-}
 
 //Créer le produit => /api/v1/admin/products
 export const newProduct = async (req, res) => {
@@ -11,4 +6,14 @@ export const newProduct = async (req, res) => {
    res.status(200).json({
     product
    })
+}
+
+//Obtenir tous les produits  => /api/v1/products
+
+export const getProducts = async (req, res) => {
+    const products = await Product.find()
+
+    res.status(200).json({
+        products
+    })
 }
