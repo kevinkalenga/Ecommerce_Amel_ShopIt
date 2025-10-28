@@ -21,3 +21,13 @@ app.listen(process.env.PORT, () => {
     console.log(`Le serveur est lancé sur le port : ${process.env.PORT} dans ${process.env.NODE_ENV}`)
 })
 
+
+// Gestion des promesses non gérés
+process.on('unhandledRejection', (err) => {
+    console.log('ERROR:', err)
+    console.error('Stack trace', err.stack)
+    Server.close(() => {
+        process.exit(1)
+    })
+})
+
