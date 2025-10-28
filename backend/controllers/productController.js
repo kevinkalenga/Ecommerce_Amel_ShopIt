@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js"
+import ErrorHandler from '../utils/errorHandler.js'
 
 //Créer le produit => /api/v1/admin/products
 export const newProduct = async (req, res) => {
@@ -19,15 +20,13 @@ export const getProducts = async (req, res) => {
 }
 //Obtenir un produit à partir de son id  => /api/v1/products/:id
 
-export const getProductDetails = async (req, res) => {
+export const getProductDetails = async (req, res, next) => {
     
      const product = await Product.findById(req?.params.id)
     
     
     if(!product) {
-        return res.status(404).json({
-            error: "Produit non trouvé"
-        })
+       return next(new ErrorHandler("Produit non trouvé", 404))
     }
     
    
@@ -39,23 +38,22 @@ export const getProductDetails = async (req, res) => {
 
 // Mettre à jour un produit (Admin) => /api/v1/products/:id
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res, next) => {
     let product = await Product.findByIdAndUpdate(req?.params.id, req.body, { new: true});
-    if(!product) {
-        return res.status(404).json({
-            error: "Produit non trouvé"
-        })
+    
+     if(!product) {
+       return next(new ErrorHandler("Produit non trouvé", 404))
     }
+    
     res.status(200).json({
         product,
     })
 }
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res, next) => {
     let product = await Product.findById(req?.params.id);
-    if(!product) {
-        return res.status(404).json({
-            error: "Produit non trouvé"
-        })
+    
+     if(!product) {
+       return next(new ErrorHandler("Produit non trouvé", 404))
     }
     await product.deleteOne();
     res.status(200).json({
