@@ -15,7 +15,7 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 
 export const getProducts = catchAsyncErrors(async (req, res) => {
     
-    const apiFilter = new APIFilters(Product, req.query).search()
+    const apiFilter = new APIFilters(Product, req.query).search().filters()
     
     const products = await apiFilter.query
 

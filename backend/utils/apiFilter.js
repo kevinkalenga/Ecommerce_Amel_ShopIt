@@ -15,6 +15,23 @@ class APIFilters {
         this.query = this.query.find({...keyword})
         return this
     }
+
+    filters() {
+        const queryCopy = {...this.queryStr}
+
+        const fieldsToRemove = ["keyword"]
+        fieldsToRemove.forEach((el) => delete queryCopy[el])
+        // à revoir sur postman
+        let queryStr = JSON.stringify(queryCopy)
+        queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`)
+        console.log(queryStr)
+
+        this.query = this.query.find(JSON.parse(queryStr))
+        return this
+    }
 }
 
 export default APIFilters;
+
+
+
