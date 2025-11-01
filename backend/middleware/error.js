@@ -1,60 +1,115 @@
-import ErrorHandler from "../utils/errorHandler.js"
+// import ErrorHandler from "../utils/errorHandler.js"
+
+// export default (err, req, res, next) => {
+//     // Les erreurs contenant le statuscode
+
+//     let error = {
+//         statusCode: err?.statusCode || 500,
+//         message: err?.message || "Internal server error"
+//     }
+
+//     if(error.name === 'CastError') {
+//         const message = `Resource not found. invalid: ${err?.path}`
+//         error = new ErrorHandler(message, 404)
+//     }
+    
+//     if(error.name === 'ValidationError') {
+//         const message = Object.values(err.errors).map((value) => value.message)
+//         error = new ErrorHandler(message, 400)
+//     }
+
+//     if(err.code === 1000) {
+//         const message = `Duplicate ${Object.keys(err.keyValue)} entered`
+//         error = new ErrorHandler(message, 400)
+//     }
+
+//     if(error.name === 'JsonWebTokenError') {
+//         const message = `JSON Web Token is invalid. Try Again!!`
+//         error = new ErrorHandler(message, 400)
+//     }
+//     if(error.name === 'TokenExpiredError') {
+//         const message = `JSON Web Token is expired. Try Again!!`
+//         error = new ErrorHandler(message, 400)
+//     }
+    
+    
+    
+    
+    
+    
+//     if(process.env.NODE_ENV === 'DEVELOPMENT') {
+//         res.status(error.statusCode).json({
+//             message: error.message,
+//             error: err,
+//             stack: err?.stack
+//         })
+//     }
+//     if(process.env.NODE_ENV === 'PRODUCTION') {
+//         res.status(error.statusCode).json({
+//             message: error.message,
+          
+//         })
+//     }
+    
+    
+    
+    
+//     res.status(error.statusCode).json({
+//         message: error.message
+//     })
+// }
+
+
+import ErrorHandler from "../utils/errorHandler.js";
 
 export default (err, req, res, next) => {
-    // Les erreurs contenant le statuscode
-
+    // Crée un objet d'erreur
     let error = {
         statusCode: err?.statusCode || 500,
         message: err?.message || "Internal server error"
+    };
+
+    // CastError = mauvais format d'ID MongoDB
+    if (err.name === "CastError") {
+        const message = `Resource not found. Invalid: ${err.path}`;
+        error = new ErrorHandler(message, 404);
     }
 
-    if(error.name === 'CastError') {
-        const message = `Resource not found. invalid: ${err?.path}`
-        error = new ErrorHandler(message, 404)
-    }
-    
-    if(error.name === 'ValidationError') {
-        const message = Object.values(err.errors).map((value) => value.message)
-        error = new ErrorHandler(message, 400)
+    // Erreur de validation Mongoose
+    if (err.name === "ValidationError") {
+        const message = Object.values(err.errors).map((value) => value.message);
+        error = new ErrorHandler(message, 400);
     }
 
-    if(err.code === 1000) {
-        const message = `Duplicate ${Object.keys(err.keyValue)} entered`
-        error = new ErrorHandler(message, 400)
+    // Erreur de duplication (email, nom, etc.)
+    if (err.code === 11000) { // ⚠️ le code MongoDB pour duplication est 11000, pas 1000
+        const message = `Duplicate ${Object.keys(err.keyValue)} entered`;
+        error = new ErrorHandler(message, 400);
     }
 
-    if(error.name === 'JsonWebTokenError') {
-        const message = `JSON Web Token is invalid. Try Again!!`
-        error = new ErrorHandler(message, 400)
+    // JWT invalide
+    if (err.name === "JsonWebTokenError") {
+        const message = "JSON Web Token is invalid. Try Again!";
+        error = new ErrorHandler(message, 400);
     }
-    if(error.name === 'TokenExpiredError') {
-        const message = `JSON Web Token is expired. Try Again!!`
-        error = new ErrorHandler(message, 400)
+
+    // JWT expiré
+    if (err.name === "TokenExpiredError") {
+        const message = "JSON Web Token is expired. Try Again!";
+        error = new ErrorHandler(message, 400);
     }
-    
-    
-    
-    
-    
-    
-    if(process.env.NODE_ENV === 'DEVELOPMENT') {
-        res.status(error.statusCode).json({
+
+    // Environnement développement
+    if (process.env.NODE_ENV === "DEVELOPMENT") {
+        return res.status(error.statusCode).json({
             message: error.message,
             error: err,
-            stack: err?.stack
-        })
+            stack: err.stack
+        });
     }
-    if(process.env.NODE_ENV === 'PRODUCTION') {
-        res.status(error.statusCode).json({
-            message: error.message,
-          
-        })
-    }
-    
-    
-    
-    
-    res.status(error.statusCode).json({
+
+    // Environnement production
+    return res.status(error.statusCode).json({
         message: error.message
-    })
-}
+    });
+};
