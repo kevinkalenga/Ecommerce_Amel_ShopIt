@@ -3,6 +3,7 @@ import path from 'path'
 import dotenv from "dotenv"
 dotenv.config({path: 'backend/config/config.env'})
 import productRoutes from "./routes/productRoutes.js"
+import authRoutes from "./routes/authRoutes.js"
 import {connectedDatabase} from './config/dbConnect.js'
 import errorMiddleware from './middleware/error.js'
 
@@ -12,6 +13,7 @@ connectedDatabase();
 
 app.use(express.json())
 app.use('/api/v1', productRoutes)
+app.use('/api/v1', authRoutes)
 
 // middleware de gestion d erreur
 app.use(errorMiddleware)
