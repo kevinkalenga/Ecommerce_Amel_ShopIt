@@ -4,6 +4,7 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js"
 import APIFilters from "../utils/apiFilter.js"
 
 
+
 //Créer le produit => /api/v1/admin/products
 export const newProduct = catchAsyncErrors(async (req, res) => {
    const product = await Product.create(req.body)
