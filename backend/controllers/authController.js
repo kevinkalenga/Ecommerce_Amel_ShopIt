@@ -1,18 +1,22 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import User from "../models/userModel.js"
 import ErrorHandler from "../utils/errorHandler.js"
+import sendToken from "../utils/sendToken.js"
 
 // Inscription de user 
 export const registerUser = catchAsyncErrors(async(req, res, next) => {
     const {name, email, password} = req.body
+
+    if(name === "" || email === "" || password === "") {
+        return next(new ErrorHandler("All fields are required", 400))
+    }
 
     const user = await User.create({
         name,
         email,
         password
     })
-    const token = user.getJwtToken()
-    res.status(201).json({token})
+   sendToken(user, 201, res)
 })
 
 // Connexion 
@@ -33,11 +37,10 @@ export const loginUser = catchAsyncErrors(async(req, res, next) => {
         return next(new ErrorHandler('Password do not match'))
     }
 
-    const token = user.getJwtToken();
-
-    res.status(200).json({
-        token
-    })
+    sendToken(user, 200, res)
 })
+
+
+
 
 
