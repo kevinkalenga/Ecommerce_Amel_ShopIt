@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import {isAuthenticatedUser} from "../middleware/auth.js"
+import {authorizeRoles, isAuthenticatedUser} from "../middleware/auth.js"
 
 import {registerUser, 
     loginUser,
@@ -8,7 +8,10 @@ import {registerUser,
      forgotPassword, 
      resetPassword,
      getUserProfile,
-     updatePassword
+     updatePassword,
+     updateProfile,
+     allUsers,
+     getUserDetails
 } from "../controllers/authController.js"
 
 // pwd
@@ -27,6 +30,11 @@ router.route("/logout").get(logoutUser)
 
 router.route("/me").get(isAuthenticatedUser, getUserProfile)
 router.route("/password/update").put(isAuthenticatedUser, updatePassword)
+
+
+// Admin Route
+router.route("/admin/users").get(isAuthenticatedUser, authorizeRoles('admin'), allUsers)
+router.route("/admin/users/:id").get(isAuthenticatedUser, authorizeRoles('admin'), getUserDetails)
 
 
 export default router;
