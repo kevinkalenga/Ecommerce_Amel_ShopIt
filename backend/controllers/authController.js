@@ -128,6 +128,31 @@ export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+    // Recup le user à partir de son id 
+    const user = await User.findById(req?.user?._id).select("+password") 
+    
+
+    // Verif de l'ancien mdp 
+    const isPasswordMatch = await user.comparePassword(req.body.oldPassword)
+
+    if(!isPasswordMatch) {
+        return next(new ErrorHandler('Old Password is incorrect', 400))
+    }
+
+    user.password = req.body.password 
+    await user.save()
+
+     // Renvoi d'un nouveau token ou succès
+    const token = user.getJwtToken();
+
+    res.status(200).json({
+        success: true,
+        token,
+        message: "Password updated successfully",
+    });
+})
+
 
 
 
