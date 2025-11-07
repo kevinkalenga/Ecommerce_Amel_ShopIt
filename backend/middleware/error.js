@@ -82,7 +82,7 @@ export default (err, req, res, next) => {
     }
 
     // Erreur de duplication (email, nom, etc.)
-    if (err.code === 11000) { // ⚠️ le code MongoDB pour duplication est 11000, pas 1000
+    if (err.code === 11000) { // le code MongoDB pour duplication est 11000, pas 1000
         const message = `Duplicate ${Object.keys(err.keyValue)} entered`;
         error = new ErrorHandler(message, 400);
     }
