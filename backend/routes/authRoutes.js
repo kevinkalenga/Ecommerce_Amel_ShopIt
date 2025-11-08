@@ -11,7 +11,9 @@ import {registerUser,
      updatePassword,
      updateProfile,
      allUsers,
-     getUserDetails
+     getUserDetails,
+     updateUser,
+     deleteUser
 } from "../controllers/authController.js"
 
 // pwd
@@ -30,11 +32,15 @@ router.route("/logout").get(logoutUser)
 
 router.route("/me").get(isAuthenticatedUser, getUserProfile)
 router.route("/password/update").put(isAuthenticatedUser, updatePassword)
+router.route("/me/update").put(isAuthenticatedUser, updateProfile)
 
 
 // Admin Route
 router.route("/admin/users").get(isAuthenticatedUser, authorizeRoles('admin'), allUsers)
 router.route("/admin/users/:id").get(isAuthenticatedUser, authorizeRoles('admin'), getUserDetails)
+      .put(isAuthenticatedUser, authorizeRoles('admin'), updateUser)
+      .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteUser)
+
 
 
 export default router;
