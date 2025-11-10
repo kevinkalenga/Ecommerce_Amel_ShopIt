@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 dotenv.config({path: 'backend/config/config.env'})
 import productRoutes from "./routes/productRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
+import orderRoutes from "./routes/orderRoutes.js"
 import {connectedDatabase} from './config/dbConnect.js'
 import errorMiddleware from './middleware/error.js'
 import cookieParser from "cookie-parser"
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/api/v1', productRoutes)
 app.use('/api/v1', authRoutes)
+app.use('/api/v1', orderRoutes)
 
 // middleware de gestion d erreur
 app.use(errorMiddleware)

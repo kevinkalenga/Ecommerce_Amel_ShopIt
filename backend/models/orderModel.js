@@ -1,4 +1,4 @@
-import mongoose from mongoose
+import mongoose from 'mongoose'
 
 const orderSchema = new mongoose.Schema({
     shippingInfo: {
@@ -55,7 +55,7 @@ const orderSchema = new mongoose.Schema({
         type:String,
         required: [true, 'Please select payment method'],
         enum: {
-            value: ["COD", "Card"],
+            values: ["COD", "Card"],
             message: "Please select: COD or Card"
         }
     },
