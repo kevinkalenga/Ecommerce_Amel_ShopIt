@@ -112,7 +112,7 @@ export const createProductReview = catchAsyncErrors(async (req, res, next) => {
     if(isReviewed) {
         // Si l'utilisateur a déjà évalué, on met à jour son avis existant(commentaires, avis)
         product.reviews.forEach((review) => {
-            if(review?.user?.toString() === req?.user?.toString()) {
+            if(review?.user?.toString() === req?.user?._id.toString()) {
                 review.comment = comment   
                 review.rating = rating     
             }
@@ -133,6 +133,20 @@ export const createProductReview = catchAsyncErrors(async (req, res, next) => {
     // Renvoie une réponse JSON indiquant que l'opération a réussi
     res.status(200).json({
         success: true
+    })
+})
+
+// Get product reviews => /api/v1/reviews 
+
+export const getProductReviews = catchAsyncErrors(async (req, res, next) => {
+    const product = await Product.findById(req.query.id) 
+
+    if(!product) {
+        return next(new ErrorHandler("Product not found", 400))
+    }
+
+    res.status(200).json({
+        reviews: product.reviews
     })
 })
 
