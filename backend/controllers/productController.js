@@ -152,19 +152,28 @@ export const getProductReviews = catchAsyncErrors(async (req, res, next) => {
 
 // Delete product review => /api/v1/admin/reviews
 export const deleteReview = catchAsyncErrors(async (req, res, next) => {
-    // find product in db 
+    // Recherche le produit dans la base de données grâce à l'ID passé dans les paramètres de requête
     let product = await Product.findById(req.query.productId)
-
+     // Si aucun produit n'est trouvé, on renvoie une erreur au middleware de gestion d’erreurs
     if(!product) {
         return next(new ErrorHandler("Product not found", 400))
     }
-
+    
+      // Filtre les avis du produit pour supprimer celui dont l'ID correspond à celui envoyé dans la requête
+    // On garde tous les avis SAUF celui à supprimer
     const reviews = product?.reviews?.filter((review) => review._id.toString() !== req?.query?.id.toString())
-
+    
+    // Compte le nombre d'avis restants après la suppression
     const numOfReviews = reviews.length 
 
+    
+    
+    // Recalcule la note moyenne :
+    // S’il ne reste aucun avis → la note devient 0
+    // Sinon → somme de toutes les notes / nombre d'avis restants
     const ratings = numOfReviews === 0 ? 0 :  product.reviews.reduce((acc, item) => item.rating + acc, 0) / numOfReviews 
 
+    // Met à jour le produit dans la base : nouveaux avis, nouveau nombre d'avis, nouvelle note
     product = await Product.findByIdAndUpdate(req.query.productId, {reviews, numOfReviews, ratings}, {new: true})
 
     res.status(200).json({

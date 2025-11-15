@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// Encrypte de password before saving the user 
+// Encrypte de password before saving the user (npx create-react-app .) and bootsrap cdn with fontawesome script under
 userSchema.pre("save", async function(next){
  if(!this.isModified("password")) {
     return next()
