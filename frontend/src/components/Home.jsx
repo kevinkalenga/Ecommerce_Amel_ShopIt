@@ -1,7 +1,10 @@
-import React from 'react'
 
+import MetaData from "./layout/MetaData"
 const Home = () => {
   return (
+      
+    <> 
+      <MetaData title="Buy Your Product On line" />
       <div className="row">
         <div className="col-12 col-sm-6 col-md-12">
           <h1 id="products_heading" className="text-secondary">Latest Products</h1>
@@ -44,6 +47,7 @@ const Home = () => {
           </section>
         </div>
       </div>
+    </> 
   )
 }
 
