@@ -1,5 +1,6 @@
 import express from "express"
 import path from 'path'
+import cors from "cors"
 import dotenv from "dotenv"
 dotenv.config({path: 'backend/config/config.env'})
 import productRoutes from "./routes/productRoutes.js"
@@ -11,10 +12,17 @@ import cookieParser from "cookie-parser"
 
 const app = express();
 
+
+
 connectedDatabase();
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}))
+
 app.use('/api/v1', productRoutes)
 app.use('/api/v1', authRoutes)
 app.use('/api/v1', orderRoutes)
