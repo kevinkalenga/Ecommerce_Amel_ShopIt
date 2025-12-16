@@ -16,7 +16,7 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 
 //Obtenir tous les produits  => /api/v1/products
 
-export const getProducts = catchAsyncErrors(async (req, res) => {
+export const getProducts = catchAsyncErrors(async (req, res, next) => {
     
     const resPerPage = 4;
     
