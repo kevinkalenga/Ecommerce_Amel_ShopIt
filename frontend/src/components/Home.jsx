@@ -4,6 +4,7 @@ import {useGetProductsQuery} from "../redux/api/productsApi"
 import ProductItem from "./product/ProductItem"
 import Loader from './layout/Loader'
 import toast from 'react-hot-toast'
+import CustomPagination from './layout/CustomPagination'
 const Home = () => {
   
   const {data, isLoading, error, isError} = useGetProductsQuery();
@@ -36,6 +37,7 @@ const Home = () => {
              
             </div>
           </section>
+          <CustomPagination resPerPage={data?.resPerPage} filteredProductsCount={data?.filteredProductsCount} />
         </div>
       </div>
     </> 

@@ -62,13 +62,13 @@ const ProductDetails = () => {
       </div>
 
       <div className="col-12 col-lg-5 mt-5">
-        <h3>Lorem Ipsum</h3>
+        <h3>{product.name}</h3>
         <p id="product_id">Product # {product?._id}</p>
 
         <hr />
 
         <div className="d-flex">
-            {renderStars(product?.ratings)}
+            {renderStars(product?.ratings || 0)}
           <span id="no-of-reviews" className="pt-1 ps-2"> 
              ({product?.numOfReviews || 0} Reviews)
            </span>
