@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useNavigate, useSearchParams} from "react-router-dom"
 import { getPriceQueryParams } from '../../helpers/helpers'
+import { PRODUCT_CATEGORIE } from '../../constants/constants'
 
 const Filter = () => {
   
@@ -10,6 +11,44 @@ const Filter = () => {
   const navigate = useNavigate();
   let [searchParams] = useSearchParams()
 
+  // combinaison de filtre prix et categorie
+  
+  useEffect(() => {
+      if(searchParams.has('min')) {
+        setMin(Number(searchParams.get('min')))
+      } else {
+        setMin(0)
+      }
+      if(searchParams.has('max')) {
+        setMax(Number(searchParams.get('max')))
+      } else {
+        setMax(0)
+      }
+  }, [searchParams])
+
+  const handleClick = (checkbox) => {
+     const updatedParams = new URLSearchParams(searchParams);
+
+     const checkboxes = document.getElementsByName(checkbox.name)
+
+     checkboxes.forEach((item) => {
+        if(item != checkbox) item.checked = false
+     })
+
+     if(checkbox.checked) {
+       updatedParams.set(checkbox.name, checkbox.value)
+     } else {
+       updatedParams.delete(checkbox.name)
+     }
+
+         navigate({
+      pathname:window.location.pathname,
+      search: updatedParams.toString()
+    })
+  }
+  
+  
+  
   // handle price filter 
   const handleButtonClick = (e) => {
      e.preventDefault() 
@@ -69,26 +108,26 @@ const Filter = () => {
       <hr />
       <h5 className="mb-3">Category</h5>
 
-      <div className="form-check">
-        <input
+      {
+        PRODUCT_CATEGORIE?.map((category) => (
+
+        <div className="form-check" key={category}>
+         <input
           className="form-check-input"
           type="checkbox"
           name="category"
-          id="check4"
-          value="Category 1"
-        />
-        <label className="form-check-label" for="check4"> Category 1 </label>
+          id={`check_${category}`}
+          value={category}
+          checked={searchParams.get("category") === category}
+          onClick={(e) => handleClick(e.target)}
+         />
+        <label className="form-check-label" htmlFor={`check_${category}`}> {category} </label>
       </div>
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          name="category"
-          id="check5"
-          value="Category 2"
-        />
-        <label className="form-check-label" for="check5"> Category 2 </label>
-      </div>
+        
+        
+        ))
+      }
+ 
 
       <hr />
       <h5 className="mb-3">Ratings</h5>
