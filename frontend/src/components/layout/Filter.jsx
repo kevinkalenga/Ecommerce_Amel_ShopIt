@@ -2,11 +2,14 @@ import React, {useState, useEffect} from 'react'
 import {useNavigate, useSearchParams} from "react-router-dom"
 import { getPriceQueryParams } from '../../helpers/helpers'
 import { PRODUCT_CATEGORIE } from '../../constants/constants'
+import renderStars from '../../utils/renderStars'
 
 const Filter = () => {
   
-  const [min, setMin] = useState(0)
-  const [max, setMax] = useState(0)
+  // const [min, setMin] = useState(0)
+  // const [max, setMax] = useState(0)
+  const [min, setMin] = useState("")
+  const [max, setMax] = useState("")
 
   const navigate = useNavigate();
   let [searchParams] = useSearchParams()
@@ -14,18 +17,54 @@ const Filter = () => {
   // combinaison de filtre prix et categorie
   
   useEffect(() => {
-      if(searchParams.has('min')) {
-        setMin(Number(searchParams.get('min')))
-      } else {
-        setMin(0)
-      }
-      if(searchParams.has('max')) {
-        setMax(Number(searchParams.get('max')))
-      } else {
-        setMax(0)
-      }
+    setMin(searchParams.get("min") ?? "")
+    setMax(searchParams.get("max") ?? "")
+      // if(searchParams.has('min')) {
+      //   setMin(Number(searchParams.get('min')))
+      // } else {
+      //   setMin(0)
+      // }
+      // if(searchParams.has('max')) {
+      //   setMax(Number(searchParams.get('max')))
+      // } else {
+      //   setMax(0)
+      // }
   }, [searchParams])
 
+  
+
+  
+    // handle price filter 
+  const handleButtonClick = (e) => {
+     e.preventDefault() 
+
+
+     const updatedParams = new URLSearchParams(searchParams);
+    //  Min
+    if(min === "") updatedParams.delete("min");
+    else updatedParams.set("min", Number(min))
+    //  Max
+    if(max === "") updatedParams.delete("max");
+    else updatedParams.set("max", Number(max))
+
+    //  const validateMin = min ? min : 0
+    //  const validateMax = max ? max : 0 
+
+    // let updatedParams = getPriceQueryParams(searchParams, "min", validateMin);
+
+    // updatedParams = getPriceQueryParams(updatedParams, "max", validateMax);
+ 
+    navigate({
+      pathname:window.location.pathname,
+      search: updatedParams.toString()
+    })
+     
+  }
+  
+  
+  
+  
+  
   const handleClick = (checkbox) => {
      const updatedParams = new URLSearchParams(searchParams);
 
@@ -49,23 +88,7 @@ const Filter = () => {
   
   
   
-  // handle price filter 
-  const handleButtonClick = (e) => {
-     e.preventDefault() 
 
-     const validateMin = min ? min : 0
-     const validateMax = max ? max : 0 
-
-    let updatedParams = getPriceQueryParams(searchParams, "min", validateMin);
-
-    updatedParams = getPriceQueryParams(updatedParams, "max", validateMax);
- 
-    navigate({
-      pathname:window.location.pathname,
-      search: updatedParams.toString()
-    })
-     
-  }
   
   
   
@@ -132,19 +155,33 @@ const Filter = () => {
       <hr />
       <h5 className="mb-3">Ratings</h5>
 
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          name="ratings"
-          id="check7"
-          value="5"
-        />
-        <label className="form-check-label" for="check7">
-          <span className="star-rating">★ ★ ★ ★ ★</span>
-        </label>
-      </div>
-      <div className="form-check">
+      {
+        [5, 4, 3, 2, 1].map((rating) =>(
+
+          <div className="form-check" key={rating}>
+             <input
+               className="form-check-input"
+               type="checkbox"
+               name="ratings"
+               id={`rating_${rating}`}
+               value={rating}
+               checked={searchParams.get("ratings") === rating.toString()}
+               onClick={(e) => handleClick(e.target)}
+             />
+            <label className="form-check-label" htmlFor={`check_${rating}`}>
+              {renderStars(rating)}
+            </label>
+         </div>
+        
+        
+        
+        ))
+      }
+      
+      
+      
+     
+      {/* <div className="form-check">
         <input
           className="form-check-input"
           type="checkbox"
@@ -155,7 +192,7 @@ const Filter = () => {
         <label className="form-check-label" for="check8">
           <span className="star-rating">★ ★ ★ ★ ☆</span>
         </label>
-      </div>
+      </div> */}
     </div>
   )
 }

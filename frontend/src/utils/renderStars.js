@@ -14,7 +14,7 @@ const renderStars = (rating) => {
                     fontSize: '20px'
                  }}
                 >
-
+                  ★
                 </span>
             ))
         }

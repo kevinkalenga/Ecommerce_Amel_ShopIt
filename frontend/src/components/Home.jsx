@@ -13,9 +13,12 @@ const Home = () => {
   const page = Number(searchParams.get("page")) || 1
   const keyword = searchParams.get("keyword") || ""
   const category = searchParams.get("category") || ""
+  const rating = searchParams.get("ratings");
   // recherche de valeur min et max
-  const rawMin = searchParams.get("price[gte]");
-  const rawMax = searchParams.get("price[lte]");
+  const rawMin = searchParams.get("min");
+  const rawMax = searchParams.get("max");
+  // const rawMin = searchParams.get("price[gte]");
+  // const rawMax = searchParams.get("price[lte]");
 
    const min = rawMin !== null ? Number(rawMin) : undefined
    const max = rawMax !== null ? Number(rawMax) : undefined
@@ -25,13 +28,20 @@ const Home = () => {
     keyword,
     ...(min !== undefined && {"price[gte]":min}),
     ...(max !== undefined && {"price[lte]":max}),
+    ...(rating && { ratings: rating }),
     ...(category && {category})
 
   }
+
+
+//  Filtrer pour eviter des valeurs undefined
+const cleanParams = Object.fromEntries(
+  Object.entries(params).filter(([_, v]) => v !== undefined && v !== "")
+)
   
   
   
-  const {data, isLoading, error, isError} = useGetProductsQuery(params);
+  const {data, isLoading, error, isError} = useGetProductsQuery(cleanParams);
   console.log(data)
 
    useEffect(() => {

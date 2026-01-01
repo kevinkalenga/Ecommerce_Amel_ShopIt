@@ -30,16 +30,28 @@ export const getProducts = catchAsyncErrors(async (req, res, next) => {
 
     const filter = {} 
 
+    // Filtre parapport aux prix
+
     if(priceGte !== undefined || priceLte !== undefined) {
         filter.price = {};
 
         if(priceGte !== undefined) filter.price.$gte = priceGte
         if(priceLte !== undefined) filter.price.$lte = priceLte
     }
-
+    
+    
+    // Filtre parapport au mot clé
     if(keyword) {
         filter.name = {
             $regex: keyword, $options: 'i'
+        }
+    }
+
+    
+    // Filtre parapport à ratings
+    if(req.query.ratings) {
+        filter.ratings = {
+            $gte: Number(req.query.ratings)
         }
     }
 
