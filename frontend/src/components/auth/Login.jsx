@@ -15,7 +15,7 @@ const Login = () => {
     if(error) {
       toast.error(error?.data?.message)
     }
-  }, [error])
+  }, [data,error])
 
   const submitHandler = (e) => {
     e.preventDefault();
