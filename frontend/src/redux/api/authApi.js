@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {userApi} from './userApi'
 
 // Creation des api
 
@@ -19,7 +20,16 @@ export const authApi = createApi({
                  body,
                }
               
-            }
+            },
+            async onQueryStarted(args, {dispatch, queryFulfilled}) {
+               try {
+                 const {data} = await queryFulfilled;
+                 await dispatch(userApi.endpoints.getMe.initiate(null))
+               } catch (error) {
+                 
+                  console.log(error)
+               }
+            },
         }),
         login: builder.mutation({
             query(body){
@@ -29,7 +39,16 @@ export const authApi = createApi({
                  body,
                }
               
-            }
+            },
+            async onQueryStarted(args, {dispatch, queryFulfilled}) {
+               try {
+                 const {data} = await queryFulfilled;
+                 await dispatch(userApi.endpoints.getMe.initiate(null))
+               } catch (error) {
+                 
+                  console.log(error)
+               }
+            },
         }),
        
     })
