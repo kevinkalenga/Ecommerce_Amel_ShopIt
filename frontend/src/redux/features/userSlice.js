@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// les infos de user avant l authentification
 const initialState = {
     user: null,
     isAuthenticated: false,
