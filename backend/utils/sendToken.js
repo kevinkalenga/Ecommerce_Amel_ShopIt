@@ -1,6 +1,7 @@
 
  export default (user, statusCode, res) => {
   // Creation de jwt token   
+  console.log(user)
   const token = user.getJwtToken()
 
   const options = {

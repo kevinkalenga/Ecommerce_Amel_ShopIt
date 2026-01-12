@@ -5,10 +5,10 @@ import { setIsAuthenticated, setUser, setLoading } from '../features/userSlice'
 
 // creation de l'api
 export const userApi = createApi({
-    reducerPath: "authApi",
+    reducerPath: "userApi",
     baseQuery:fetchBaseQuery({
         baseUrl: "http://localhost:4000/api/v1",
-        
+        credentials: "include"
 
     }),
     tagTypes: ["User"],

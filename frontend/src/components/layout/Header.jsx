@@ -1,11 +1,15 @@
 import React from 'react'
 import Search from './Search'
 import { useGetMeQuery } from '../../redux/api/userApi'
+import { useSelector } from 'react-redux';
 
 const Header = () => {
   
   const {data} = useGetMeQuery();
   console.log(data)
+
+  const {user} = useSelector(state => state.auth);
+  console.log(user)
   
   return (
     <nav className="navbar row">
