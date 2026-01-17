@@ -13,7 +13,8 @@ import {registerUser,
      allUsers,
      getUserDetails,
      updateUser,
-     deleteUser
+     deleteUser,
+     uploadAvatar
 } from "../controllers/authController.js"
 
 // pwd
@@ -33,6 +34,7 @@ router.route("/logout").get(logoutUser)
 router.route("/me").get(isAuthenticatedUser, getUserProfile)
 router.route("/password/update").put(isAuthenticatedUser, updatePassword)
 router.route("/me/update").put(isAuthenticatedUser, updateProfile)
+router.route("/me/upload_avatar").put(isAuthenticatedUser, uploadAvatar)
 
 
 // Admin Route

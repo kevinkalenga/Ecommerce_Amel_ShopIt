@@ -56,11 +56,7 @@ const Header = () => {
             aria-expanded="false"
           >
             <figure className="avatar avatar-nav">
-              <img
-                src="../images/default_avatar.jpg"
-                alt="User Avatar"
-                className="rounded-circle"
-              />
+                <img src={user?.avatar?.url || "/images/default_avatar.jpg"} alt="User Avatar" className="rounded-circle"/>
             </figure>
             <span>{user.name}</span>
           </button>

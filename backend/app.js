@@ -31,7 +31,7 @@ app.use('/api/v1', orderRoutes)
 app.use(errorMiddleware)
 
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
     console.log(`Le serveur est lancé sur le port : ${process.env.PORT} dans ${process.env.NODE_ENV}`)
 })
 
@@ -40,7 +40,7 @@ app.listen(process.env.PORT, () => {
 process.on('unhandledRejection', (err) => {
     console.log('ERROR:', err)
     console.error('Stack trace', err.stack)
-    Server.close(() => {
+    server.close(() => {
         process.exit(1)
     })
 })
