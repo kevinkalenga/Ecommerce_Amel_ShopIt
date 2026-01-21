@@ -10,11 +10,11 @@ import { useSelector } from 'react-redux';
 
 const ForgotPassword = () => {
   
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
 
-    const [forgotPassword, {isLoading, error, isSuccess}] = useForgotPasswordMutation()
+    const [forgotPassword, {isLoading, error, isSuccess, reset}] = useForgotPasswordMutation()
 
     const {isAuthenticated} = useSelector((state) => state.auth)
 
@@ -24,12 +24,15 @@ const ForgotPassword = () => {
         }
 
         if(error) {
-            toast.error(error?.data?.message)
+            toast.error(error?.data?.message || "Something went wrong")
+             reset()
         }
         if(isSuccess) {
-            toast.error("Email sent. Please check your inbox")
+            toast.success("Email sent. Please check your inbox")
+            navigate("/login");
+            reset()
         }
-    }, [error, isAuthenticated, isSuccess, navigate])
+    }, [error, isAuthenticated, isSuccess, navigate, reset])
   
     const submitHandler = (e) => {
         e.preventDefault()

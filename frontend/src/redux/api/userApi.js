@@ -7,7 +7,8 @@ import { setIsAuthenticated, setUser, setLoading } from '../features/userSlice'
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery:fetchBaseQuery({
-        baseUrl: "http://localhost:4000/api/v1",
+        baseUrl: "/api/v1",
+        // baseUrl: "http://localhost:4000/api/v1",
         credentials: "include"
 
     }),
@@ -68,8 +69,17 @@ export const userApi = createApi({
                 }
             },
         }),
+        resetPassword: builder.mutation({
+             query({token, body}) {
+                return {
+                    url: `/password/reset/${token}`,
+                    method: "PUT",
+                    body
+                }
+            },
+        }),
     })
 
 })
 
-export const {useGetMeQuery, useUpdateProfileMutation, useUploadAvatarMutation, useUpdatePasswordMutation, useForgotPasswordMutation} = userApi
+export const {useGetMeQuery, useUpdateProfileMutation, useUploadAvatarMutation, useUpdatePasswordMutation, useForgotPasswordMutation, useResetPasswordMutation} = userApi
