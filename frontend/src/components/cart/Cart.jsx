@@ -2,6 +2,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import MetaData from '../layout/MetaData'
+import {setCartItem} from "../../redux/features/cartSlice"
+
 
 
 
@@ -12,6 +14,35 @@ const Cart = () => {
   const navigate = useNavigate()
   const {cartItems} = useSelector((state) => state.cart)
   
+    
+    const increseQty = (item, quantity) => {
+      const newQty = quantity + 1 
+      if(newQty > item?.stock) return;
+      setItemToCart(item, newQty)
+    }
+    
+    
+    const decreseQty = (item, quantity) => {
+        const newQty = quantity - 1 
+      if(newQty <= 0) return;
+      setItemToCart(item, newQty)
+    }
+  
+    const setItemToCart = (item, newQty) => {
+      const cartItem = {
+    
+         product:item?.product,
+         name:item?.name,
+         price:item?.price,
+         image: item?.image,
+         stock: item?.stock,
+         quantity:newQty
+     }
+     dispatch(setCartItem(cartItem))
+    }
+    
+    
+    
     return (
     <>
       <MetaData title={'Your Cart'} />
@@ -40,21 +71,21 @@ const Cart = () => {
               />
             </div>
             <div className="col-5 col-lg-3">
-              <Link href={`/product/${item.product}`}>{item?.name}</Link>
+              <Link to={`/product/${item.product}`}>{item?.name}</Link>
             </div>
             <div className="col-4 col-lg-2 mt-4 mt-lg-0">
               <p id="card_item_price">${item?.price}</p>
             </div>
             <div className="col-4 col-lg-3 mt-4 mt-lg-0">
               <div className="stockCounter d-inline">
-                <span className="btn btn-danger minus"> - </span>
+                <span className="btn btn-danger minus" onClick={()=>decreseQty(item, item.quantity)}> - </span>
                 <input
                   type="number"
                   className="form-control count d-inline"
                   value={item?.quantity}
                   readonly
                 />
-                <span className="btn btn-primary plus"> + </span>
+                <span className="btn btn-primary plus" onClick={()=>increseQty(item, item.quantity)}> + </span>
               </div>
             </div>
             <div className="col-4 col-lg-1 mt-4 mt-lg-0">
