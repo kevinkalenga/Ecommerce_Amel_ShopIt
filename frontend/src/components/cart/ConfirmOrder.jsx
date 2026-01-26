@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import MetaData from '../layout/MetaData'
 import { useSelector, useDispatch } from 'react-redux';
 import {calculateOrderCost} from '../../helpers/helpers';
-
+import CheckoutSteps from './CheckoutSteps';
 
 
 
@@ -20,6 +20,7 @@ const ConfirmOrder = () => {
      
     <>
      <MetaData title={"Confirm Order Info"} />
+     <CheckoutSteps shipping confirmOrder />
      <div className="row d-flex justify-content-between">
       <div className="col-12 col-lg-8 mt-5 order-confirm">
         <h4 className="mb-3">Shipping Info</h4>

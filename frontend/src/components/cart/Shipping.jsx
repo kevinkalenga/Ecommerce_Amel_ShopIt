@@ -4,6 +4,7 @@ import MetaData from '../layout/MetaData'
 import { useSelector, useDispatch } from 'react-redux';
 import { saveShippingInfo } from '../../redux/features/cartSlice';
 import {getNames} from "country-list"
+import CheckoutSteps from './CheckoutSteps';
 
 const Shipping = () => {
   
@@ -41,7 +42,7 @@ const Shipping = () => {
    return (
     <>
        <MetaData title={"Shipping Info"} />
-       
+        <CheckoutSteps shipping />
           <div className="row wrapper mb-5">
         <div className="col-10 col-lg-5">
           <form className="shadow rounded bg-body" onSubmit={submitHandler}>
