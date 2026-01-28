@@ -1,0 +1,4 @@
+//Installation de stripe cli(webhook)
+1. coté backend: stripe login (Entrée deux fois) => Allow access 
+2. coté backend: stripe listen --events checkout.session.completed --forward to localhost:3000/api/v1/payment/webhook (Entrée)
+3. copier le lien envoyé par webhook et le collé dans le chier env
