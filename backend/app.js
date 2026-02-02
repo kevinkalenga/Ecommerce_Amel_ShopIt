@@ -9,6 +9,7 @@ import orderRoutes from "./routes/orderRoutes.js"
 import {connectedDatabase} from './config/dbConnect.js'
 import errorMiddleware from './middleware/error.js'
 import cookieParser from "cookie-parser"
+import paymentRoutes from './routes/paymentRoutes.js'
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cors({
 app.use('/api/v1', productRoutes)
 app.use('/api/v1', authRoutes)
 app.use('/api/v1', orderRoutes)
+app.use('/api/v1', paymentRoutes)
 
 // middleware de gestion d erreur
 app.use(errorMiddleware)

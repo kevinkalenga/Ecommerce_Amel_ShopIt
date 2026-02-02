@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { calculateOrderCost } from '../../helpers/helpers';
 import {toast} from "react-hot-toast"
 import CheckoutSteps from './CheckoutSteps';
-import { useCreateNewOrderMutation } from '../../redux/api/orderApi';
+import { useCreateNewOrderMutation, useStripeCheckoutSessionMutation } from '../../redux/api/orderApi';
 
 const PaymentMethod = () => {
   
@@ -14,8 +14,18 @@ const PaymentMethod = () => {
   const {shippingInfo, cartItems} = useSelector((state) => state.cart)
 
   const [createNewOrder, {error, isSuccess}] = useCreateNewOrderMutation()
+  const [stripeCheckoutSession, {data:checkoutData, error:checkoutError, isLoading}] = 
+      useStripeCheckoutSessionMutation()
 
   const navigate = useNavigate()
+  useEffect(() => {
+    if(checkoutData) {
+      window.location.href = checkoutData?.url
+    }
+    if(checkoutError) {
+      toast.error(checkoutError?.data?.message)
+    }
+  }, [checkoutData, checkoutError])
 
   useEffect(() => {
     if(error) {
@@ -38,7 +48,9 @@ const PaymentMethod = () => {
      const {itemsPrice, shippingPrice, taxPrice, totalPrice} = calculateOrderCost(cartItems)
 
      const orderItems = cartItems.map((item, index) => {
+      
         const productId = item.product || item._id 
+        console.log()
         if(!productId) {
           console.warn(`No product found for cartItem[${index}] :`, item)
         } else {
@@ -72,8 +84,16 @@ const PaymentMethod = () => {
      }
 
      if(method === "Card") {
-      // Stripe Checkout
-      alert("Card")
+         const orderData = {
+           shippingInfo,
+           orderItems:cartItems,
+           itemsPrice,
+           shippingAmount:shippingPrice,
+           taxAmount: taxPrice,
+           totalAmount:totalPrice,
+           
+         }
+         stripeCheckoutSession(orderData)
      }
   }
   
@@ -118,7 +138,7 @@ const PaymentMethod = () => {
             </label>
           </div>
 
-          <button id="shipping_btn" type="submit" className="btn py-2 w-100">
+          <button disabled={isLoading} id="shipping_btn" type="submit" className="btn py-2 w-100">
             CONTINUE
           </button>
         </form>
