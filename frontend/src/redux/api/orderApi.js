@@ -29,9 +29,12 @@ export const orderApi = createApi({
                     body
                 }
             }
+        }),
+        myOrders: builder.query({
+            query: () => `/me/orders`,
         })
        
     })
 })
 
-export const {useCreateNewOrderMutation, useStripeCheckoutSessionMutation} = orderApi
+export const {useCreateNewOrderMutation, useStripeCheckoutSessionMutation, useMyOrdersQuery} = orderApi
