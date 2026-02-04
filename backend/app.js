@@ -17,6 +17,11 @@ const app = express();
 
 connectedDatabase();
 
+
+import bodyParser from 'body-parser'; // Required for Stripe webhook raw parser
+// ⚠️ Register Stripe webhook FIRST with raw body parser
+app.use('/api/v1/payment/webhook', bodyParser.raw({ type: 'application/json' }));
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({

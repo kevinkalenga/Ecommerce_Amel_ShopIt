@@ -23,6 +23,7 @@ const Home = () => {
    const min = rawMin !== null ? Number(rawMin) : undefined
    const max = rawMax !== null ? Number(rawMax) : undefined
   
+  //  filtre
   const params = {
     page,
     keyword,

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import toast from 'react-hot-toast'
 import {useNavigate} from 'react-router-dom';
 import MetaData from '../layout/MetaData'
 import { useSelector, useDispatch } from 'react-redux';
@@ -22,6 +23,7 @@ const Shipping = () => {
    const {shippingInfo} = useSelector((state) => state.cart)
 
    useEffect(() => {
+     
      if(shippingInfo) {
         setAddress(shippingInfo.address || "");
         setCity(shippingInfo.city || "");
