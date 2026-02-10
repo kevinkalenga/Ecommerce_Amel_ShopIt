@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { useMyOrdersQuery } from '../../redux/api/orderApi'
 import {MDBDataTable} from 'mdbreact'
 import {Link} from 'react-router-dom'
+import MetaData from '../layout/MetaData'
 
 
 
@@ -55,6 +56,7 @@ const MyOrders = () => {
   
     return (
     <div>
+        <MetaData title={"Order Detail"} />
         <h1 className='my-5'>{data?.orders?.length} Orders</h1>
         <MDBDataTable 
          data={setOrders()}

@@ -26,9 +26,15 @@ export const userSlice = createSlice({
             state.loading = false
         },
         setCredentials(state,action) {
-            state.user = action.payload;
-            state.isAuthenticated = true;
-            state.loading = false;
+            // state.user = action.payload;
+            // state.isAuthenticated = true;
+            // state.loading = false;
+            state.user = {
+                ...action.payload.user,
+                token: action.payload.token
+            };
+             state.isAuthenticated = true;
+             state.loading = false;
         }
     }
 })

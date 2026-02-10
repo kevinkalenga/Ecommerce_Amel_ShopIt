@@ -5,10 +5,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const productApi = createApi({
     reducerPath: "productApi",
     baseQuery:fetchBaseQuery({
-        baseUrl: "http://localhost:4000/api/v1",
+         baseUrl: "http://localhost:4000/api/v1",
+        // baseUrl: "/api/v1",
+        // prepareHeaders: (headers, {getState}) => {
+        //     const token = getState().auth?.user?.token;
+        //     if(token) headers.set("Authorization", `Bearer ${token}`);
+        //     return headers
+        // }
         
 
     }),
+    // tagTypes:["Product"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -20,8 +27,20 @@ export const productApi = createApi({
         }),
         getProductDetails: builder.query({
             query: (id) => `/products/${id}`,
-        })
+        }),
+        
+        createReview:builder.mutation({
+            query:({productId, rating, comment}) => ({
+                url: `/products/${productId}/reviews`,
+                method: "POST",
+                body: {rating, comment}
+            }),
+             invalidatesTags: (result, error, {productId}) => [
+            {type: "Product", id: productId},
+          ]
+        }),
+       
     })
 })
 
-export const {useGetProductsQuery, useGetProductDetailsQuery} = productApi
+export const {useGetProductsQuery, useGetProductDetailsQuery, useCreateReviewMutation} = productApi
