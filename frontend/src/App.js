@@ -23,6 +23,7 @@ import ConfirmOrder from './components/cart/ConfirmOrder'
 import PaymentMethod from './components/cart/PaymentMethod'
 import MyOrders from './components/order/MyOrders'
 import OrderDetail from './components/order/OrderDetail'
+import PaymentSuccess from './components/cart/PaymentSuccess';
 
 function App() {
   return (
@@ -85,6 +86,12 @@ function App() {
                      <OrderDetail />
                  </ProtectedRoute>
               } />
+               <Route path='/payment/success' element={
+                  <ProtectedRoute>
+                       <PaymentSuccess />
+                  </ProtectedRoute>
+               
+            } />
                 <Route path='/cart' element={<Cart />} />
            </Routes>
         </div>

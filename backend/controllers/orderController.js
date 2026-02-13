@@ -18,6 +18,10 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
         paymentInfo
     } = req.body
 
+       if (!orderItems || !Array.isArray(orderItems) || orderItems.length === 0) {
+        return next(new ErrorHandler("Aucun produit dans la commande", 400));
+    }
+    
     // creéer une commande 
     const order = await Order.create({
         orderItems,
@@ -26,9 +30,13 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
         taxAmount,
         shippingAmount,
         totalAmount,
-        paymentMethod,
-        paymentInfo,
-        user: req.user._id
+        paymentMethod: "Card",
+        paymentInfo:{
+           id: session.payment_intent,
+           status: session.payment_status
+        },
+         user: userId
+        // user: req.user._id
     })
 
     res.status(200).json({
@@ -39,7 +47,7 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
 // Get order details => /api/v1/orders/:id 
 
 export const getOrderDetails = catchAsyncErrors(async (req, res, next) => {
-    const order = await Order.findById(req.params.id).populate("user", "name email")
+    const order = await Order.findById(req.params.id).populate("user", "name email").populate("orderItems.product", "name image price");
 
     if(!order) {
         return next(new ErrorHandler("No order found with this ID", 404))

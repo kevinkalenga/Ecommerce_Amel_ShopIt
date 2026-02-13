@@ -2,10 +2,22 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // Creation des api
 
+//prepareHeaders ajoute automatiquement le token JWT à toutes les requêtes de cet API.
+
 export const orderApi = createApi({
     reducerPath: "orderApi",
     baseQuery:fetchBaseQuery({
         baseUrl: "/api/v1",
+        
+         
+             prepareHeaders: (headers, { getState }) => {
+        const token = getState().auth?.user?.token;
+         console.log("User token in prepareHeaders:", token);
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
+      return headers;
+    },
         
 
     }),
