@@ -10,7 +10,7 @@ export const orderApi = createApi({
         baseUrl: "/api/v1",
         
          
-             prepareHeaders: (headers, { getState }) => {
+       prepareHeaders: (headers, { getState }) => {
         const token = getState().auth?.user?.token;
          console.log("User token in prepareHeaders:", token);
         if (token) {

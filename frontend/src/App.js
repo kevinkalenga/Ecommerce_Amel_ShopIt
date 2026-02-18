@@ -24,6 +24,7 @@ import PaymentMethod from './components/cart/PaymentMethod'
 import MyOrders from './components/order/MyOrders'
 import OrderDetail from './components/order/OrderDetail'
 import PaymentSuccess from './components/cart/PaymentSuccess';
+import Invoice from './components/invoice/Invoice'
 
 function App() {
   return (
@@ -89,6 +90,12 @@ function App() {
                <Route path='/payment/success' element={
                   <ProtectedRoute>
                        <PaymentSuccess />
+                  </ProtectedRoute>
+               
+            } />
+               <Route path='/invoice/order/:id' element={
+                  <ProtectedRoute>
+                       <Invoice />
                   </ProtectedRoute>
                
             } />
