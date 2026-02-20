@@ -1,24 +1,26 @@
 // fonction permettant de recevoir une note
-const renderStars = (rating) => {
-  // arrondir le nombre
-    const fullStars = Math.round(rating)
-    return(
-      <>
-        {
-          // Création d'un tableau de 5 elements
-            [...Array(5)].map((_, i)=>(
-                <span
-                 key={i}
-                 style={{
-                    color: i < fullStars ? '#ffb829':'#e4e5e9',
-                    fontSize: '20px'
-                 }}
-                >
-                  ★
-                </span>
-            ))
-        }
-      </>
-    )
+const renderStars = (rating, setRating) => {
+  return (
+    <>
+      {[...Array(5)].map((_, i) => {
+        const starValue = i + 1
+
+        return (
+          <span
+            key={i}
+            onClick={() => setRating(starValue)}
+            style={{
+              cursor: 'pointer',
+              color: starValue <= rating ? '#ffb829' : '#e4e5e9',
+              fontSize: '22px'
+            }}
+          >
+            ★
+          </span>
+        )
+      })}
+    </>
+  )
 }
+
 export default renderStars

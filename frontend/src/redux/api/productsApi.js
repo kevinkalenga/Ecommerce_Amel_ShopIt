@@ -6,6 +6,7 @@ export const productApi = createApi({
     reducerPath: "productApi",
     baseQuery:fetchBaseQuery({
          baseUrl: "http://localhost:4000/api/v1",
+         credentials: 'include',
         // baseUrl: "/api/v1",
         // prepareHeaders: (headers, {getState}) => {
         //     const token = getState().auth?.user?.token;
@@ -39,8 +40,17 @@ export const productApi = createApi({
             {type: "Product", id: productId},
           ]
         }),
+        submitReview: builder.mutation({
+            query(body) {
+                return {
+                    url:"/reviews",
+                    method: "PUT",
+                    body
+                }
+            }
+        })
        
     })
 })
 
-export const {useGetProductsQuery, useGetProductDetailsQuery, useCreateReviewMutation} = productApi
+export const {useGetProductsQuery, useGetProductDetailsQuery, useCreateReviewMutation, useSubmitReviewMutation} = productApi

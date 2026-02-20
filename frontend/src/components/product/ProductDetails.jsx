@@ -5,8 +5,9 @@ import { useParams } from 'react-router-dom'
 import MetaData from "../layout/MetaData"
 import renderStars from '../../utils/renderStars'
 import Loader from '../layout/Loader'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {setCartItem} from '../../redux/features/cartSlice'
+import NewReview from '../reviews/NewReview'
 
 
 const ProductDetails = () => {
@@ -16,6 +17,8 @@ const ProductDetails = () => {
    const dispatch = useDispatch()
    const {data, isLoading, error, isError} = useGetProductDetailsQuery(params.id);
   console.log(data)
+
+  const {isAuthenticated} = useSelector((state) => state.auth)
    const product = data?.product
    useEffect(() => {
     setActiveImg(product?.images[0]? product?.images[0]?.url : '/images/default_product.png')
@@ -150,9 +153,15 @@ const ProductDetails = () => {
         <hr />
         <p id="product_seller mb-3">Sold by: <strong>{product?.seller}</strong></p>
 
-        <div className="alert alert-danger my-5" type="alert">
-          Login to post your review.
-        </div>
+        {
+          isAuthenticated ? (<NewReview productId={product._id} />):(
+                <div className="alert alert-danger my-5" type="alert">
+                     Login to post your review.
+                </div>
+          )
+        }
+        
+       
       </div>
     </div>
   </>
