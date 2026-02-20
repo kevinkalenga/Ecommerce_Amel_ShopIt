@@ -28,9 +28,10 @@ export const productApi = createApi({
         }),
         getProductDetails: builder.query({
             query: (id) => `/products/${id}`,
+            invalidatesTags: ["Product"],
             
         }),
-        invalidatesTags: ["Product"],
+        // invalidatesTags: ["Product"],
         
         createReview:builder.mutation({
             query:({productId, rating, comment}) => ({
@@ -49,10 +50,16 @@ export const productApi = createApi({
                     method: "PUT",
                     body
                 }
-            }
-        })
+            },
+            invalidatesTags: ["Product"],
+        }),
+        canUserReview: builder.query({
+            query: (productId) => `/can_review/?productId=${productId}`,
+            
+        }),
        
     })
 })
 
-export const {useGetProductsQuery, useGetProductDetailsQuery, useCreateReviewMutation, useSubmitReviewMutation} = productApi
+export const {useGetProductsQuery, useGetProductDetailsQuery, 
+    useCreateReviewMutation, useSubmitReviewMutation, useCanUserReviewQuery} = productApi
