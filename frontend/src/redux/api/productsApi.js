@@ -16,7 +16,7 @@ export const productApi = createApi({
         
 
     }),
-    // tagTypes:["Product"],
+     tagTypes:["Product"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -28,7 +28,9 @@ export const productApi = createApi({
         }),
         getProductDetails: builder.query({
             query: (id) => `/products/${id}`,
+            
         }),
+        invalidatesTags: ["Product"],
         
         createReview:builder.mutation({
             query:({productId, rating, comment}) => ({

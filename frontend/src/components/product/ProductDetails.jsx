@@ -8,6 +8,7 @@ import Loader from '../layout/Loader'
 import { useDispatch, useSelector } from 'react-redux'
 import {setCartItem} from '../../redux/features/cartSlice'
 import NewReview from '../reviews/NewReview'
+import ListReview from '../reviews/ListReview'
 
 
 const ProductDetails = () => {
@@ -164,6 +165,9 @@ const ProductDetails = () => {
        
       </div>
     </div>
+    {
+      product?.reviews?.length > 0 && <ListReview reviews={product?.reviews} />
+    }
   </>
   )
 }
