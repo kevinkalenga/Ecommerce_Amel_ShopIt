@@ -11,7 +11,7 @@ import {delete_file, upload_file} from '../utils/cloudinary.js'
 export const registerUser = catchAsyncErrors(async(req, res, next) => {
     const {name, email, password} = req.body
 
-    if(name === "" || email === "" || password === "") {
+    if(!name || !email || !password) {
         return next(new ErrorHandler("All fields are required", 400))
     }
 
@@ -92,7 +92,7 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
 // Connexion 
 export const loginUser = catchAsyncErrors(async(req, res, next) => {
     const {email, password} = req.body 
-    if(!email || !password || email === "" || password === "") {
+    if(!email || !password) {
         return next(new ErrorHandler("Please enter email and password", 400))
     }
 

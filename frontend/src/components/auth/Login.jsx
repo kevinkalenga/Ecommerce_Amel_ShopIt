@@ -11,15 +11,15 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
-  const [login, {isLoading, error, data, isSuccess}] = useLoginMutation()
+  const [login, {isLoading, error}] = useLoginMutation()
 
    // Succès login
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success("Login Successfully");
-            navigate("/");
-        }
-    }, [isSuccess, navigate]);
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success("Login Successfully");
+    //         navigate("/");
+    //     }
+    // }, [isSuccess, navigate]);
   
   useEffect(() => {
     if(isAuthenticated) {
@@ -29,22 +29,36 @@ const Login = () => {
   }, [isAuthenticated, error, navigate])
 
    // Gestion d'erreur
-   useEffect(() => {
-    if(error) {
-      toast.error(error?.data?.message)
-    }
-  }, [data,error])
+  //  useEffect(() => {
+  //   if(error) {
+  //     toast.error(error?.data?.message)
+  //   }
+  // }, [data,error])
   
   
   
  
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    const loginData = {email, password}
+    if (!email || !password) {
+        toast.error("Email and password are required");
+      return;
+    }
 
-    login(loginData)
+    // const loginData = {email, password}
+
+    // login(loginData)
+    try {
+       await login({ email, password }).unwrap();
+
+       toast.success("Login successfully");
+       navigate("/");
+
+     } catch (err) {
+        toast.error(err?.data?.message || "Invalid credentials");
+     }
   }
   
   

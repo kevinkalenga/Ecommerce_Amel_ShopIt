@@ -17,7 +17,7 @@ const Register = () => {
 
   const {name, email, password} = user
   
-   const [register, {isLoading, error, data}] = useRegisterMutation()
+   const [register, {isLoading, error}] = useRegisterMutation()
 
   
   useEffect(() => {
@@ -26,21 +26,30 @@ const Register = () => {
     }
   }, [isAuthenticated, error, navigate])
   
-   // Gestion d'erreur
-   useEffect(() => {
-    if(error) {
-      toast.error(error?.data?.message)
-    }
-  }, [data,error])
+ 
 
   const submitHandler = async(e) => {
     e.preventDefault();
 
-    const signupData = {name, email, password}
+      // Validation frontend
+  if (!name || !email || !password) {
+    toast.error("All fields are required");
+    return;
+  }
+    
+    
+  
 
-    await register(signupData);
-    toast.success("Registered successfully!")
-    navigate('/login')
+
+    try {
+         await register({ name, email, password }).unwrap();
+
+         toast.success("Registered successfully!");
+         navigate('/login');
+
+      } catch (err) {
+         toast.error(err?.data?.message || "Registration failed");
+      }
 
    
   }
