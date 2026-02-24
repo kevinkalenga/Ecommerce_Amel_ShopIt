@@ -1,14 +1,39 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import AdminLayout from '../layout/AdminLayout'
 import DatePicker from "react-datepicker";
 import SalesChart from '../charts/SalesChart'
+import {useGetDashboardSalesQuery} from '../../redux/api/orderApi'
+import toast from 'react-hot-toast'
+import Loader from "../layout/Loader"
 
 import "react-datepicker/dist/react-datepicker.css";
 
 const Dashboard = () => {
   
-     const [startDate, setStartDate] = useState(new Date().setDate(1));
+    // const [startDate, setStartDate] = useState(new Date().setDate(1));
+    const [startDate, setStartDate] = useState(() => {
+      const d = new Date();
+      d.setDate(1)
+      return d;
+    });
   const [endDate, setEndDate] = useState(new Date());
+
+  const {data, isLoading, error, refetch} = useGetDashboardSalesQuery({
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString()
+  })
+   
+  useEffect(() => {
+    if(error) {
+      toast.error(error?.data?.message)
+    }
+  }, [error])
+
+  const submitHandler = () => {
+    refetch()
+  }
+
+  if(isLoading) return <Loader />
   
   
   return (
@@ -37,7 +62,7 @@ const Dashboard = () => {
               className='form-control'
             />
       </div>
-      <button className="btn fetch-btn ms-4 mt-3 px-5">Fetch</button>
+      <button onClick={submitHandler} className="btn fetch-btn ms-4 mt-3 px-5">Fetch</button>
     </div>
 
     <div className="row pr-4 my-5">
@@ -65,7 +90,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-     <SalesChart />
+     <SalesChart salesData = {data?.salesData} />
     <div className="mb-5"></div>
     </AdminLayout>
   )

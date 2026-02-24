@@ -176,3 +176,89 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
          success: true
      })
 })
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::: Sales and Orders 
+
+// Get Sales Data => /api/v1/admin/get_sales
+async function getSalesDate(startDate, endDate) {
+     const salesData = await Order.aggregate([
+        {
+            // filtrer le resultat 
+            $match: {
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate)
+                }
+            }
+        },
+        {
+            // Group data 
+            $group: {
+                _id: {
+                    date: {$dateToString: {format: "%Y-%m-%d", date: "$createdAt"}}
+                },
+                 totalSales: {$sum: "$totalAmount"},
+                 numOrder: {$sum: 1}
+            },
+          
+        },
+        {
+            // Trier par date
+            $sort: {"_id.date": 1}
+        }
+     ])
+
+     return salesData
+}
+
+
+
+
+function getDateBetween(startDate, endDate) {
+    const dates = []
+    let currentDate = new Date(startDate)
+
+    while (currentDate <= new Date(endDate)) {
+        const formattedDate = currentDate.toISOString().split("T")[0];
+        dates.push(formattedDate);
+        currentDate.setDate(currentDate.getDate() + 1)
+    }
+    return dates
+}
+
+
+
+
+
+export const getSales = catchAsyncErrors(async (req, res, next) => {
+    const startDate = new Date(req.query.startDate)
+    const endDate = new Date(req.query.endDate)
+
+   startDate.setHours(0, 0, 0, 0)
+   endDate.setHours(23, 59, 59, 999)
+
+   // Recup les ventes depuis mongodb
+
+    const salesDate = await getSalesDate(startDate, endDate)
+     // Gestion de toutes les dates
+    const allDates = getDateBetween(startDate, endDate)
+
+    // Completer les dates manquantes 
+    const finalSalesDate = allDates.map((date) => {
+        // On compare avec la date en db
+        const found = salesDate.find((s) => s._id.date === date);
+        return found ? found : {_id: {date}, totalSales: 0, numOrder: 0}
+    })
+
+    // Totalisation 
+    const totalSales = finalSalesDate.reduce((acc, cur) => acc + cur.totalSales, 0)
+    const totalOrders = finalSalesDate.reduce((acc, cur) => acc + cur.numOrder, 0)
+   
+   
+   res.status(200).json({
+         success: true,
+         salesDate: finalSalesDate,
+         totalSales,
+         totalOrders
+         
+     })
+})
