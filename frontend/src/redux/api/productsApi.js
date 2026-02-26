@@ -16,7 +16,7 @@ export const productApi = createApi({
         
 
     }),
-     tagTypes:["Product"],
+     tagTypes:["Product", "AdminProducts"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -59,6 +59,16 @@ export const productApi = createApi({
         }),
         getAdminProducts: builder.query({
             query: () => `/admin/products`
+        }),
+        createProduct: builder.mutation({
+            query(body){
+                return {
+                    url:"/admin/products",
+                    method:"POST",
+                    body
+                }
+            },
+            invalidatesTags: ["AdminProducts"],
         })
        
     })
@@ -66,4 +76,4 @@ export const productApi = createApi({
 
 export const {useGetProductsQuery, useGetProductDetailsQuery, 
     useCreateReviewMutation, useSubmitReviewMutation,
-     useCanUserReviewQuery, useGetAdminProductsQuery} = productApi
+     useCanUserReviewQuery, useGetAdminProductsQuery, useCreateProductMutation} = productApi
