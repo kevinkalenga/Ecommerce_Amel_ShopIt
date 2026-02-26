@@ -22,6 +22,9 @@ const Dashboard = () => {
     startDate: startDate.toISOString(),
     endDate: endDate.toISOString()
   })
+  console.log('DASHBOARD DATA:', data);
+console.log('SALES DATA:', data?.salesData);
+console.log('SALES DATA LENGTH:', data?.salesData?.length);
    
   useEffect(() => {
     if(error) {
@@ -72,7 +75,7 @@ const Dashboard = () => {
             <div className="text-center card-font-size">
               Sales
               <br />
-              <b>$0.00</b>
+              <b>${data?.totalSales?.toFixed(2)}</b>
             </div>
           </div>
         </div>
@@ -82,15 +85,15 @@ const Dashboard = () => {
         <div className="card text-white bg-danger o-hidden h-100">
           <div className="card-body">
             <div className="text-center card-font-size">
-              Orders
-              <br />
-              <b>0</b>
+              Orders 
+             <br />
+              <b>{data?.totalOrders}</b>
             </div>
           </div>
         </div>
       </div>
     </div>
-     <SalesChart salesData = {data?.salesData} />
+     <SalesChart salesDate = {data?.salesDate}  />
     <div className="mb-5"></div>
     </AdminLayout>
   )

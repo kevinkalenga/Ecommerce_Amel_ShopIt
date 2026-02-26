@@ -34,7 +34,7 @@ const AdminLayout = ({children}) => {
      {
         name: 'Reviews',
         url: "/admin/reviews",
-        icon: "fas fa-receipt"
+        icon: "fas fa-star"
      },
     
    ]
