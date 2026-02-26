@@ -236,5 +236,16 @@ export const canUserReview = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+// Get products Admin => /api/v1/admin/products
+export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+    
+   const product = await Product.find();
+    
+    
+    res.status(200).json({
+       product
+    })
+})
+
 
 
