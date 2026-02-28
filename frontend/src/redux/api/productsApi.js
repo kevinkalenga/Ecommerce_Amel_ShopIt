@@ -100,6 +100,16 @@ export const productApi = createApi({
             },
             invalidatesTags: [ "AdminProducts"],
         }),
+        deleteProduct: builder.mutation({
+            query(id){
+                return {
+                    url:`/admin/products/${id}`,
+                    method:"DELETE",
+                   
+                }
+            },
+            invalidatesTags: [ "AdminProducts"],
+        }),
        
     })
 })
@@ -107,4 +117,4 @@ export const productApi = createApi({
 export const {useGetProductsQuery, useGetProductDetailsQuery, 
     useCreateReviewMutation, useSubmitReviewMutation,
      useCanUserReviewQuery, useGetAdminProductsQuery, useCreateProductMutation,
-      useUpdateProductMutation, useUploadProductImagesMutation, useDeleteProductImageMutation} = productApi
+      useUpdateProductMutation, useUploadProductImagesMutation, useDeleteProductImageMutation, useDeleteProductMutation} = productApi

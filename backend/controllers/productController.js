@@ -108,7 +108,17 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
      if(!product) {
        return next(new ErrorHandler("Produit non trouvé", 404))
     }
-    await product.deleteOne();
+    
+    for(let i = 0; i < product?.images?.length; i++) {
+        if(product.images[i]?.public_id) {
+            delete_file(product.images[i].public_id)
+        }
+    }
+    
+    await product.deleteOne(); 
+    
+    
+    
     res.status(200).json({
         message: "Produit supprimé"
     })
@@ -289,6 +299,7 @@ export const deleteProductImage = catchAsyncErrors(async (req, res, next) => {
        product
     })
 })
+
 
 
 
