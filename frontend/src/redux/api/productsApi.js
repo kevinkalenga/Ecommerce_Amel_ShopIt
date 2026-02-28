@@ -80,10 +80,21 @@ export const productApi = createApi({
             },
             invalidatesTags: ["Product", "AdminProducts"],
         }),
+        uploadProductImages: builder.mutation({
+            query({id, body}){
+                return {
+                    url:`/admin/products/${id}/upload_images`,
+                    method:"PUT",
+                    body
+                }
+            },
+            invalidatesTags: ["Product"],
+        }),
        
     })
 })
 
 export const {useGetProductsQuery, useGetProductDetailsQuery, 
     useCreateReviewMutation, useSubmitReviewMutation,
-     useCanUserReviewQuery, useGetAdminProductsQuery, useCreateProductMutation, useUpdateProductMutation} = productApi
+     useCanUserReviewQuery, useGetAdminProductsQuery, useCreateProductMutation,
+      useUpdateProductMutation, useUploadProductImagesMutation} = productApi

@@ -3,6 +3,7 @@ import ErrorHandler from '../utils/errorHandler.js'
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js"
 import APIFilters from "../utils/apiFilter.js"
 import Order from '../models/orderModel.js'
+import { upload_file } from "../utils/cloudinary.js"
 
 
 
@@ -241,6 +242,27 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
     
    const product = await Product.find();
     
+    
+    res.status(200).json({
+       product
+    })
+})
+// Upload product images  => /api/v1/admin/products/:id/upload_images
+export const uploadProductImages = catchAsyncErrors(async (req, res, next) => {
+    
+   const product = await Product.findById(req.params.id);
+    
+     if(!product) {
+        return next(new ErrorHandler("Product not found", 400))
+    }
+
+    const uploader = async (fileBuffer) => await upload_file(fileBuffer, "shop/products")
+
+    const urls = await Promise.all(req.files.map(file => uploader(file.buffer)))
+
+     product.images.push(...urls)
+
+     await product.save()
     
     res.status(200).json({
        product

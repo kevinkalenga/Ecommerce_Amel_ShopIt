@@ -26,8 +26,8 @@ const UpdateProduct = () => {
 
  
   const [updateProduct, {isLoading, error, isSuccess}] = useUpdateProductMutation()
+  
   const {data, refetch} = useGetProductDetailsQuery(params?.id)
-
   useEffect(() => {
     if(data?.product) {
         setProduct({
@@ -50,7 +50,7 @@ const UpdateProduct = () => {
 
      if(isSuccess) {
       toast.success("Product Created")
-      navigate('/admin/products')
+      // navigate('/admin/products')
      }
   }, [error, isSuccess, navigate])
 
