@@ -2,7 +2,7 @@ import express from 'express'
 import { getProducts, newProduct, getProductDetails, updateProduct,
      deleteProduct, createProductReview,
       getProductReviews, deleteReview, canUserReview, getAdminProducts,
-      uploadProductImages} from '../controllers/productController.js'
+      uploadProductImages, deleteProductImage} from '../controllers/productController.js'
 import {isAuthenticatedUser, authorizeRoles} from '../middleware/auth.js'
 // Meroire storage pour recup des fichiers
 import multer from 'multer';
@@ -25,6 +25,7 @@ router.route("/admin/reviews").delete(isAuthenticatedUser, authorizeRoles('admin
 router.route("/can_review").get(isAuthenticatedUser, canUserReview)
 
 router.route("/admin/products/:id/upload_images").put(isAuthenticatedUser, authorizeRoles("admin"), upload.array('images'), uploadProductImages)
+router.route("/admin/products/:id/delete_images").put(isAuthenticatedUser, authorizeRoles("admin"), deleteProductImage)
 
 
 
