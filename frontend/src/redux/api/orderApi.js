@@ -53,11 +53,21 @@ export const orderApi = createApi({
         }),
         getAdminOrders: builder.query({
             query: () => `/admin/orders`,
-        })
+        }),
+        updateOrder: builder.mutation({
+            query({id, body}){
+                return {
+                    url:`/admin/orders/${id}`,
+                    method: "PUT",
+                    body
+                }
+            },
+            invalidatesTags: ["Order"]
+        }),
        
        
     })
 })
 
 export const {useCreateNewOrderMutation, useStripeCheckoutSessionMutation, 
-    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery, useGetAdminOrdersQuery} = orderApi
+    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery, useGetAdminOrdersQuery, useUpdateOrderMutation} = orderApi
