@@ -88,7 +88,10 @@ export const stripeCheckoutSession = catchAsyncErrors(async (req, res, next) => 
     totalAmount,
 
     paymentMethod: "Card",
-    paymentStatus: "pending",
+    // paymentStatus: "pending",
+    paymentInfo: {
+     status: "pending",
+    },
   });
 
   // Line items Stripe
@@ -125,6 +128,7 @@ export const stripeCheckoutSession = catchAsyncErrors(async (req, res, next) => 
 });
 
 export const stripeWebhookHandler = async (req, res) => {
+  console.log("🔥 STRIPE WEBHOOK HIT");
   // Elle sert à verifier la requete venant de stripe
   const sig = req.headers["stripe-signature"];
   // La variable contenant l'evenement

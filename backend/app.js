@@ -10,6 +10,8 @@ import {connectedDatabase} from './config/dbConnect.js'
 import errorMiddleware from './middleware/error.js'
 import cookieParser from "cookie-parser"
 import paymentRoutes from './routes/paymentRoutes.js'
+import bodyParser from 'body-parser'
+import { stripeWebhookHandler } from "./controllers/paymentController.js";
 
 const app = express();
 
@@ -22,13 +24,20 @@ connectedDatabase();
 // ⚠️ Register Stripe webhook FIRST with raw body parser
 // app.use('/api/v1/payment/webhook', bodyParser.raw({ type: 'application/json' }));
 
-app.use((req, res, next) => {
-  if (req.originalUrl === '/api/v1/payment/webhook') {
-    next(); // laisser le webhook gérer son raw body
-  } else {
-    express.json()(req, res, next); // parser JSON normalement
-  }
-});
+// app.use((req, res, next) => {
+//   if (req.originalUrl === '/api/v1/payment/webhook') {
+//     next(); // laisser le webhook gérer son raw body
+//   } else {
+//     express.json()(req, res, next); // parser JSON normalement
+//   }
+// });
+
+// Webhook Stripe AVANT tout
+app.post(
+  "/api/v1/payment/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  stripeWebhookHandler
+);
 
 
 app.use(express.json())

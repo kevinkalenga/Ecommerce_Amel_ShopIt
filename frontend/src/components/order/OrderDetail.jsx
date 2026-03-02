@@ -198,9 +198,12 @@ const OrderDetail = () => {
               </tr>
               <tr>
                 <th scope="row">Status</th>
-                <td className={orderStatus === "Delivered" ? "greenColor" : ""}>
+                 <td className={String(orderStatus).includes("Delivered") ? "greenColor" : "redColor "}>
                   <b>{orderStatus}</b>
                 </td>
+                {/* <td className={orderStatus === "Delivered" ? "greenColor" : "redColor"}>
+                  <b>{orderStatus}</b>
+                </td> */}
               </tr>
               <tr>
                 <th scope="row">Date</th>
@@ -237,7 +240,7 @@ const OrderDetail = () => {
             <tbody>
               <tr>
                 <th scope="row">Status</th>
-                <td className={paymentInfo?.status === "paid" ? "greenColor" : ""}>
+                <td className={paymentInfo?.status === "paid" ? "greenColor" : "redColor"}>
                   <b>{paymentInfo?.status || "Pending"}</b>
                 </td>
               </tr>
@@ -273,11 +276,11 @@ const OrderDetail = () => {
                   </div>
 
                   <div className="col-5 col-lg-5">
-                    <Link to={`/products/${item._id}`}>{item.name}</Link>
+                    <Link to={`/products/${item._id}`}>{item?.name}</Link>
                   </div>
 
                   <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                    <p>${item.price}</p>
+                    <p>${item?.price}</p>
                   </div>
 
                   <div className="col-4 col-lg-3 mt-4 mt-lg-0">

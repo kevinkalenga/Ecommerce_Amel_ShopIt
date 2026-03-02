@@ -50,10 +50,14 @@ export const orderApi = createApi({
         }),
         orderDetails: builder.query({
             query: (id) => `/orders/${id}`,
+        }),
+        getAdminOrders: builder.query({
+            query: () => `/admin/orders`,
         })
+       
        
     })
 })
 
 export const {useCreateNewOrderMutation, useStripeCheckoutSessionMutation, 
-    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery} = orderApi
+    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery, useGetAdminOrdersQuery} = orderApi
