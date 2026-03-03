@@ -1,6 +1,6 @@
 
 import React, {useEffect} from 'react'
-import {useGetAdminUsersQuery} from '../../redux/api/userApi'
+import {useGetAdminUsersQuery, useDeleteUserMutation} from '../../redux/api/userApi'
 import toast from 'react-hot-toast'
 import {Link} from 'react-router-dom'
 import MetaData from "../layout/MetaData"
@@ -13,13 +13,30 @@ const ListUsers = () => {
   const {data, isLoading, error} = useGetAdminUsersQuery();
   console.log(data)
 
+  const [deleteUser, {isLoading: isDeleteLoading , error: deleteError, isSuccess}] = useDeleteUserMutation()
+
     useEffect(() => {
               
             if(error) {
                 toast.error(error?.data?.message)
             }
+            if(deleteError) {
+                    toast.error(deleteError?.data?.message)
+            }
+
+             if (isSuccess) {
+                toast.success("User Deleted");
+              }
           
-        }, [error])
+      }, [error, deleteError, isSuccess])
+
+        const deleteUserHandler = async (id) => {
+          try {
+           await deleteUser(id).unwrap(); // unwrap permet de récupérer l’erreur si elle existe
+          } catch (err) {
+            toast.error(err?.data?.message || "Delete failed");
+          }
+        };
 
       const setUsers = () => {
        const users = {
@@ -45,7 +62,8 @@ const ListUsers = () => {
                       <i className='fa fa-pencil'></i>
                     </Link>
                     <Link className='btn btn-outline-danger btn-sm ms-2'
-                      
+                     onClick={() => deleteUserHandler(user?._id)} 
+                     disabled={isDeleteLoading}
                     >
                       <i className='fa fa-trash'></i>
                     </Link>
