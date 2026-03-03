@@ -5,12 +5,14 @@ import MetaData from "../layout/MetaData"
 import {MDBDataTable} from 'mdbreact'
 import Loader from '../layout/Loader'
 import AdminLayout from '../layout/AdminLayout'
-import { useGetAdminOrdersQuery } from '../../redux/api/orderApi'
+import { useGetAdminOrdersQuery, useDeleteOrderMutation } from '../../redux/api/orderApi'
 
 const ListOrders = () => {
   
         const {data, isLoading, error} = useGetAdminOrdersQuery()
         console.log(data)
+
+          const [deleteOrder, {error:deleteError, isLoading: isDeleteLoading, isSuccess}] = useDeleteOrderMutation()
     
         
         
@@ -19,8 +21,24 @@ const ListOrders = () => {
         if(error) {
             toast.error(error?.data?.message)
         }
+
+        if (deleteError) {
+          toast.error(deleteError?.data?.message);
+        }
+        if (isSuccess) {
+          toast.success("Order Deleted");
+        }
       
-    }, [error])
+    }, [error, deleteError, isSuccess])
+
+
+    const deleteOrderHandler = async (id) => {
+     try {
+        await deleteOrder(id).unwrap(); // unwrap permet de récupérer l’erreur si elle existe
+      } catch (err) {
+        toast.error(err?.data?.message || "Delete failed");
+     }
+    };
 
 
     
@@ -45,7 +63,10 @@ const ListOrders = () => {
                          <Link to={`/admin/orders/${order?._id}`} className='btn btn-outline-primary btn-sm'>
                            <i className='fa fa-pencil'></i>
                          </Link>
-                         <Link className='btn btn-outline-danger btn-sm ms-2'>
+                         <Link className='btn btn-outline-danger btn-sm ms-2'
+                             onClick={() => deleteOrderHandler(order?._id)} 
+                             disabled={isDeleteLoading}
+                         >
                            <i className='fa fa-trash'></i>
                          </Link>
                        

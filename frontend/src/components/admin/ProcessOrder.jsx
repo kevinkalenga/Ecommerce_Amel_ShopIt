@@ -11,6 +11,7 @@ const ProcessOrder = () => {
   const [status, setStatus] = useState("")
   const params = useParams();
   const {data} = useOrderDetailsQuery(params?.id)
+  console.log(data)
 
   const order = data?.order || {};
 

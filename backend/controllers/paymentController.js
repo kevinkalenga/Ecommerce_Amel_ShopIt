@@ -128,7 +128,7 @@ export const stripeCheckoutSession = catchAsyncErrors(async (req, res, next) => 
 });
 
 export const stripeWebhookHandler = async (req, res) => {
-  console.log("🔥 STRIPE WEBHOOK HIT");
+  console.log("STRIPE WEBHOOK HIT");
   // Elle sert à verifier la requete venant de stripe
   const sig = req.headers["stripe-signature"];
   // La variable contenant l'evenement
@@ -175,9 +175,11 @@ export const stripeWebhookHandler = async (req, res) => {
     // Date du paiement
     order.paidAt = Date.now();
     // Sauvegarder les infos du paiment
+      // Sécurité double webhook
+    if (order.paymentStatus === "paid") return res.status(200).json({ received: true });
     order.paymentInfo = {
-      id: session.payment_intent, //Id du paiment stripe
-      status: session.payment_status, //Status du paiment
+      id: session.payment_intent || session.payment_intent_id, //Id du paiment stripe
+      status:  session.payment_status || "paid", //Status du paiment
     };
     
     // Sauvegarder en bd

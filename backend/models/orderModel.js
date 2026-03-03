@@ -59,6 +59,11 @@ const orderSchema = new mongoose.Schema({
             message: "Please select: COD or Card"
         }
     },
+     paymentStatus: {
+        type: String,
+        enum: ["pending", "paid"],
+        default: "pending"
+    },
     paymentInfo: {
         id: String,
         status: String

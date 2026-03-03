@@ -47,7 +47,7 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
 // Get order details => /api/v1/orders/:id 
 
 export const getOrderDetails = catchAsyncErrors(async (req, res, next) => {
-    const order = await Order.findById(req.params.id).populate("user", "name email") //.populate("orderItems.product", "name image price");
+    const order = await Order.findById(req.params.id).populate("user", "name email");
 
     if(!order) {
         return next(new ErrorHandler("No order found with this ID", 404))
@@ -185,9 +185,11 @@ async function getSalesDate(startDate, endDate) {
             // filtrer le resultat 
             $match: {
                 createdAt: {
+                   
                     $gte: new Date(startDate),
                     $lte: new Date(endDate)
-                }
+                },
+                //   orderStatus: "Delivered",
             }
         },
         {

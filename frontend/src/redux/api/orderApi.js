@@ -64,10 +64,20 @@ export const orderApi = createApi({
             },
             invalidatesTags: ["Order"]
         }),
+        deleteOrder: builder.mutation({
+            query(id){
+                return {
+                    url:`/admin/orders/${id}`,
+                    method: "DELETE",
+                   
+                }
+            },
+            invalidatesTags: ["AdminOrders"]
+        }),
        
        
     })
 })
 
 export const {useCreateNewOrderMutation, useStripeCheckoutSessionMutation, 
-    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery, useGetAdminOrdersQuery, useUpdateOrderMutation} = orderApi
+    useMyOrdersQuery, useOrderDetailsQuery, useGetDashboardSalesQuery, useGetAdminOrdersQuery, useUpdateOrderMutation, useDeleteOrderMutation} = orderApi
