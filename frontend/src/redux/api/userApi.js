@@ -81,6 +81,22 @@ export const userApi = createApi({
         getAdminUsers: builder.query({
             query: () => `/admin/users`,
             providesTags: ["AdminUsers"]
+        }),
+        getUserDetails: builder.query({
+            query: (id) => `/admin/users/${id}`,
+            providesTags: ["AdminUsers"]
+        }),
+        updateUser: builder.mutation({
+            query({id, body}){
+              return {
+                url: `/admin/users/${id}`,
+                method: "PUT",
+                body
+              };
+              
+            },
+            invalidatesTags: ["AdminUsers"]
+          
         })
     })
 
@@ -88,4 +104,4 @@ export const userApi = createApi({
 
 export const {useGetMeQuery, useUpdateProfileMutation,
      useUploadAvatarMutation, useUpdatePasswordMutation,
-      useForgotPasswordMutation, useResetPasswordMutation, useGetAdminUsersQuery} = userApi
+      useForgotPasswordMutation, useResetPasswordMutation, useGetAdminUsersQuery, useUpdateUserMutation, useGetUserDetailsQuery} = userApi
