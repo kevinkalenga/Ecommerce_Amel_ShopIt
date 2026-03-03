@@ -78,8 +78,14 @@ export const userApi = createApi({
                 }
             },
         }),
+        getAdminUsers: builder.query({
+            query: () => `/admin/users`,
+            providesTags: ["AdminUsers"]
+        })
     })
 
 })
 
-export const {useGetMeQuery, useUpdateProfileMutation, useUploadAvatarMutation, useUpdatePasswordMutation, useForgotPasswordMutation, useResetPasswordMutation} = userApi
+export const {useGetMeQuery, useUpdateProfileMutation,
+     useUploadAvatarMutation, useUpdatePasswordMutation,
+      useForgotPasswordMutation, useResetPasswordMutation, useGetAdminUsersQuery} = userApi
