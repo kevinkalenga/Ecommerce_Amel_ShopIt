@@ -34,7 +34,7 @@ const MyOrders = () => {
       orders.rows.push({
         id:order._id,
         amount: `$${order.totalAmount.toFixed(2)}`,
-        status: order.paymentInfo?.status.toUpperCase() || "N/A",
+        status: order.paymentStatus?.toUpperCase() || "PENDING",
         orderStatus: order.orderStatus,
         actions: (
           <>

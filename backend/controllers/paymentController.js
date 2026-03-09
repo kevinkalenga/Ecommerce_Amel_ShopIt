@@ -127,67 +127,141 @@ export const stripeCheckoutSession = catchAsyncErrors(async (req, res, next) => 
   res.status(200).json({ url: session.url });
 });
 
+// export const stripeWebhookHandler = async (req, res) => {
+//   console.log("STRIPE WEBHOOK HIT");
+//   // Elle sert à verifier la requete venant de stripe
+//   const sig = req.headers["stripe-signature"];
+//   // La variable contenant l'evenement
+//   let event;
+//   // verification de la signature
+//   try {
+//     event = stripe.webhooks.constructEvent(
+//       req.body,
+//       sig,
+//       process.env.STRIPE_WEBHOOK_SECRET
+//     );
+//   } catch (error) {
+//     console.error("Webhook signature error:", error.message);
+//     return res.status(400).send(`Webhook Error: ${error.message}`);
+//   }
+//   // Traitement de l'evenement reussi lors du paiement
+//   if (event.type === "checkout.session.completed") {
+//     // Données de la session stripe à la fin du paiement
+//     const session = event.data.object;
+//     //  Recup de l'id de la commande dans metaData lors du checkout 
+//     const orderId = session.metadata.orderId;
+    
+//     // Si l'id n'existe pas
+//     if (!orderId) {
+//       console.error("orderId manquant dans metadata");
+//       return res.status(400).send("orderId missing");
+//     }
+    
+//     // On recup la commande en bd à partir de l'id
+//     const order = await Order.findById(orderId);
+//     // Si la commande n'existe pas
+//     if (!order) {
+//       console.error("Commande introuvable:", orderId);
+//       return res.status(404).send("Order not found");
+//     }
+
+//     //  Sécurité anti double webhook (pour que le mm evenement ne soit pas envoyé plusieurs fois)
+//     if (order.paymentStatus === "paid") {
+//       return res.status(200).json({ received: true });
+//     }
+    
+//     // Commande payée
+//     order.paymentStatus = "paid";
+//     // Date du paiement
+//     order.paidAt = Date.now();
+//     // Sauvegarder les infos du paiment
+//       // Sécurité double webhook
+//     if (order.paymentStatus === "paid") return res.status(200).json({ received: true });
+//     order.paymentInfo = {
+//       id: session.payment_intent || session.payment_intent_id, //Id du paiment stripe
+//       status:  session.payment_status || "paid", //Status du paiment
+//     };
+    
+//     // Sauvegarder en bd
+//     await order.save();
+//   }
+  
+//   // envoi de la reponse
+//   res.status(200).json({ received: true });
+// };
+
+
 export const stripeWebhookHandler = async (req, res) => {
-  console.log("STRIPE WEBHOOK HIT");
-  // Elle sert à verifier la requete venant de stripe
+
+  // 🔐 Signature envoyée par Stripe dans les headers
+  // Sert à vérifier que la requête vient bien de Stripe
   const sig = req.headers["stripe-signature"];
-  // La variable contenant l'evenement
   let event;
-  // verification de la signature
+
   try {
+    // 🛡️ Vérification de l’authenticité de l’événement Stripe
+    // req.body DOIT être un RAW BODY (express.raw)
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-  } catch (error) {
-    console.error("Webhook signature error:", error.message);
-    return res.status(400).send(`Webhook Error: ${error.message}`);
+  } catch (err) {
+    // ❌ Signature invalide = requête rejetée
+    console.error("Webhook error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  // Traitement de l'evenement reussi lors du paiement
+
+  // ✅ On ne traite que l’événement qui confirme le paiement
   if (event.type === "checkout.session.completed") {
-    // Données de la session stripe à la fin du paiement
+
+    // 📦 Objet session Stripe contenant les infos du paiement
     const session = event.data.object;
-    //  Recup de l'id de la commande dans metaData lors du checkout 
+
+    // 🆔 Récupération de l’ID de la commande
+    // Cet ID a été injecté dans metadata lors du checkout
     const orderId = session.metadata.orderId;
-    
-    // Si l'id n'existe pas
+
+    // Sécurité : on s’assure que l’ID existe
     if (!orderId) {
-      console.error("orderId manquant dans metadata");
+      console.error("orderId missing in metadata");
       return res.status(400).send("orderId missing");
     }
-    
-    // On recup la commande en bd à partir de l'id
+
+    // 🔎 Récupération de la commande en base de données
     const order = await Order.findById(orderId);
-    // Si la commande n'existe pas
+
+    // Sécurité : commande inexistante
     if (!order) {
-      console.error("Commande introuvable:", orderId);
+      console.error("Order not found:", orderId);
       return res.status(404).send("Order not found");
     }
 
-    //  Sécurité anti double webhook (pour que le mm evenement ne soit pas envoyé plusieurs fois)
+    // 🔁 Protection contre les doubles webhooks Stripe
+    // Stripe peut envoyer le même événement plusieurs fois
     if (order.paymentStatus === "paid") {
       return res.status(200).json({ received: true });
     }
-    
-    // Commande payée
+
+    // 💰 Le paiement est confirmé → commande payée
     order.paymentStatus = "paid";
-    // Date du paiement
+
+    // 🕒 Date exacte du paiement
     order.paidAt = Date.now();
-    // Sauvegarder les infos du paiment
-      // Sécurité double webhook
-    if (order.paymentStatus === "paid") return res.status(200).json({ received: true });
+
+    // 🧾 Sauvegarde des infos Stripe (IMPORTANT pour le back-office)
     order.paymentInfo = {
-      id: session.payment_intent || session.payment_intent_id, //Id du paiment stripe
-      status:  session.payment_status || "paid", //Status du paiment
+      id: session.payment_intent,       // ex: pi_3Nxxxxx
+      status: session.payment_status,   // ex: paid
     };
-    
-    // Sauvegarder en bd
+
+
+
+    // 💾 Sauvegarde définitive en base de données
     await order.save();
   }
-  
-  // envoi de la reponse
+
+  // 📬 Réponse obligatoire pour dire à Stripe :
+  // "Webhook bien reçu, inutile de renvoyer"
   res.status(200).json({ received: true });
 };
-
-

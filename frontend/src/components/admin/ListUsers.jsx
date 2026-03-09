@@ -48,7 +48,7 @@ const ListUsers = () => {
           {label: "Actions", field: "actions", sort:"asc"},
         ],
         rows: []
-      }
+        }
     
        data?.users?.forEach((user) => {
         users.rows.push({
@@ -70,7 +70,7 @@ const ListUsers = () => {
                 </>
             )
         })
-    })
+      })
     return users
     
     

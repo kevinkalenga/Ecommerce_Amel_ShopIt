@@ -11,6 +11,7 @@ export const orderApi = createApi({
         
          
        prepareHeaders: (headers, { getState }) => {
+        console.log("FULL STATE:", getState());
         const token = getState().auth?.user?.token;
          console.log("User token in prepareHeaders:", token);
         if (token) {

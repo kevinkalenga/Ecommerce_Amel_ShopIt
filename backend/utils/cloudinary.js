@@ -1,7 +1,7 @@
 
 import cloudinary from "cloudinary";
 import dotenv from "dotenv";
-import streamifier from "streamifier"; // ⚡ important
+import streamifier from "streamifier"; // important
 
 dotenv.config({ path: "backend/config/config.env" });
 
