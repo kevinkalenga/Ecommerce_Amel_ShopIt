@@ -16,7 +16,7 @@ export const productApi = createApi({
         
 
     }),
-     tagTypes:["Product", "AdminProducts"],
+     tagTypes:["Product", "AdminProducts", 'Reviews'],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -111,7 +111,17 @@ export const productApi = createApi({
             invalidatesTags: [ "AdminProducts"],
         }),
         getProductReviews: builder.query({
-            query: (productId) => `/reviews?id=${productId}`
+            query: (productId) => `/reviews?id=${productId}`,
+              invalidatesTags: [ "Reviews"],
+        }),
+        deleteReview: builder.mutation({
+            query({productId, id}){
+               return {
+                  url: `/admin/reviews?productId=${productId}&id=${id}`,
+                  method:"DELETE"
+               }
+            },
+              invalidatesTags: [ "Reviews"],
         })
        
     })
@@ -121,4 +131,4 @@ export const {useGetProductsQuery, useGetProductDetailsQuery,
     useCreateReviewMutation, useSubmitReviewMutation,
      useCanUserReviewQuery, useGetAdminProductsQuery, useCreateProductMutation,
       useUpdateProductMutation, useUploadProductImagesMutation, 
-      useDeleteProductImageMutation, useDeleteProductMutation, useLazyGetProductReviewsQuery} = productApi
+      useDeleteProductImageMutation, useDeleteProductMutation, useLazyGetProductReviewsQuery, useDeleteReviewMutation} = productApi

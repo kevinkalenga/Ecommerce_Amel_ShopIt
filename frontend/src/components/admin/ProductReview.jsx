@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 
 import {MDBDataTable} from 'mdbreact'
 import Loader from '../layout/Loader'
-import { useLazyGetProductReviewsQuery } from '../../redux/api/productsApi'
+import { useLazyGetProductReviewsQuery, useDeleteReviewMutation} from '../../redux/api/productsApi'
 import AdminLayout from '../layout/AdminLayout'
 
 const ProductReview = () => {
@@ -12,12 +12,24 @@ const ProductReview = () => {
   const [productId, setProductId] = useState("")
 
   const [getProductReviews, {data, isLoading, error}] = useLazyGetProductReviewsQuery()
+  const [deleteReview, {isLoading:isDeleteLoading, error:deleteError, isSuccess}] = useDeleteReviewMutation()
 
   useEffect(() => {
     if(error) {
       toast.error(error?.data?.message)
     }
-  }, [error])
+     if(deleteError) {
+            toast.error(deleteError?.data?.message)
+    }
+     
+    if (isSuccess) {
+        toast.success("Review Deleted");
+    }
+  }, [error, deleteError, isSuccess])
+
+  const deleteReviewHandler = (id) => {
+    deleteReview({productId, id})
+  }
   
   const submitHandler = (e) => {
     e.preventDefault()
@@ -48,8 +60,8 @@ const ProductReview = () => {
                    <>
                        
                        <Link className='btn btn-outline-danger btn-sm ms-2'
-                        // onClick={() => deleteUserHandler(user?._id)} 
-                        // disabled={isDeleteLoading}
+                         onClick={() => deleteReviewHandler(review?._id)} 
+                         disabled={isDeleteLoading}
                        >
                          <i className='fa fa-trash'></i>
                        </Link>
