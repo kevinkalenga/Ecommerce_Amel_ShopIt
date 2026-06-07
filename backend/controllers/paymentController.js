@@ -193,7 +193,7 @@ export const stripeCheckoutSession = catchAsyncErrors(async (req, res, next) => 
 
 export const stripeWebhookHandler = async (req, res) => {
 
-  // 🔐 Signature envoyée par Stripe dans les headers
+  //  Signature envoyée par Stripe dans les headers
   // Sert à vérifier que la requête vient bien de Stripe
   const sig = req.headers["stripe-signature"];
   let event;
@@ -207,15 +207,15 @@ export const stripeWebhookHandler = async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    // ❌ Signature invalide = requête rejetée
+    //  Signature invalide = requête rejetée
     console.error("Webhook error:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // ✅ On ne traite que l’événement qui confirme le paiement
+  //  On ne traite que l’événement qui confirme le paiement
   if (event.type === "checkout.session.completed") {
 
-    // 📦 Objet session Stripe contenant les infos du paiement
+    //  Objet session Stripe contenant les infos du paiement
     const session = event.data.object;
 
     // 🆔 Récupération de l’ID de la commande
@@ -228,7 +228,7 @@ export const stripeWebhookHandler = async (req, res) => {
       return res.status(400).send("orderId missing");
     }
 
-    // 🔎 Récupération de la commande en base de données
+    //  Récupération de la commande en base de données
     const order = await Order.findById(orderId);
 
     // Sécurité : commande inexistante
@@ -257,7 +257,7 @@ export const stripeWebhookHandler = async (req, res) => {
 
 
 
-    // 💾 Sauvegarde définitive en base de données
+    // Sauvegarde définitive en base de données
     await order.save();
   }
 

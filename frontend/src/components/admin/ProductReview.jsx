@@ -55,7 +55,8 @@ const ProductReview = () => {
                id: review?._id,
                rating: review?.rating,
                comment: review?.comment,
-               user: review?.user?.name || review?.name || review?.user || "N/A",
+               user: review?.user?.name ,
+              //  user: review?.user?.name || review?.name || review?.user || "N/A",
                actions: (
                    <>
                        
@@ -107,16 +108,7 @@ const ProductReview = () => {
       </div>
     </div>
     
-    {/* <table className="table table-bordered table-striped mt-5">
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Rating</th>
-          <th>Comment</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table> */}
+   
     {
       data?.reviews?.length > 0 ? (
          

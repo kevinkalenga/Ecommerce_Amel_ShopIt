@@ -32,10 +32,10 @@ const Register = () => {
     e.preventDefault();
 
       // Validation frontend
-  if (!name || !email || !password) {
-    toast.error("All fields are required");
-    return;
-  }
+     if (!name || !email || !password) {
+       toast.error("All fields are required");
+       return;
+      }
     
     
   

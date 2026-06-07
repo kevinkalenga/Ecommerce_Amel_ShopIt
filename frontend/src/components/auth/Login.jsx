@@ -13,13 +13,7 @@ const Login = () => {
 
   const [login, {isLoading, error}] = useLoginMutation()
 
-   // Succès login
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         toast.success("Login Successfully");
-    //         navigate("/");
-    //     }
-    // }, [isSuccess, navigate]);
+
   
   useEffect(() => {
     if(isAuthenticated) {
@@ -28,12 +22,7 @@ const Login = () => {
    
   }, [isAuthenticated, error, navigate])
 
-   // Gestion d'erreur
-  //  useEffect(() => {
-  //   if(error) {
-  //     toast.error(error?.data?.message)
-  //   }
-  // }, [data,error])
+
   
   
   
@@ -47,9 +36,7 @@ const Login = () => {
       return;
     }
 
-    // const loginData = {email, password}
-
-    // login(loginData)
+    
     try {
        await login({ email, password }).unwrap();
 
