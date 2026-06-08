@@ -19,29 +19,28 @@
 
 
 export default (user, statusCode, res) => {
-    // Création du JWT
-    const token = user.getJwtToken();
+  const token = user.getJwtToken();
 
-    const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
+  const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
 
-    const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "PRODUCTION",
-        sameSite:
-            process.env.NODE_ENV === "PRODUCTION"
-                ? "none"
-                : "lax",
-        expires: new Date(
-            Date.now() + days * 24 * 60 * 60 * 1000
-        ),
-    };
+  const options = {
+    httpOnly: true,
 
-    res
-        .status(statusCode)
-        .cookie("token", token, options)
-        .json({
-            success: true,
-            token,
-            user,
-        });
+    // 🔥 IMPORTANT POUR VERCEL + RENDER
+    secure: true,
+    sameSite: "none",
+
+    expires: new Date(
+      Date.now() + days * 24 * 60 * 60 * 1000
+    ),
+  };
+
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      success: true,
+      token,
+      user,
+    });
 };
