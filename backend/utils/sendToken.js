@@ -1,18 +1,45 @@
 
- export default (user, statusCode, res) => {
-  // Creation de jwt token   
-  console.log(user)
-  const token = user.getJwtToken()
+//  export default (user, statusCode, res) => {
+//   // Creation de jwt token   
+//   console.log(user)
+//   const token = user.getJwtToken()
 
+//   const options = {
+//      expires: new Date(
+//         Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+//      ),
+//      httpOnly: true,
+//   }
+
+//   // Set the cookie 
+//   res.status(statusCode).cookie("token", token, options).json({
+//     token,
+//   })
+// } 
+
+
+export default (user, statusCode, res) => {
+  // Génération du token JWT
+  const token = user.getJwtToken();
+
+  // Conversion safe de la variable d'environnement
+  const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
+
+  // Options cookie
   const options = {
-     expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
-     ),
-     httpOnly: true,
-  }
+    httpOnly: true,
+    expires: new Date(
+      Date.now() + days * 24 * 60 * 60 * 1000
+    ),
+  };
 
-  // Set the cookie 
-  res.status(statusCode).cookie("token", token, options).json({
-    token,
-  })
-}
+  // Envoi cookie + réponse
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      success: true,
+      token,
+      user,
+    });
+};
