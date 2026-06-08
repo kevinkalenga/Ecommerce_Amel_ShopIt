@@ -20,17 +20,8 @@ const app = express();
 connectedDatabase();
 
 
-// import bodyParser from 'body-parser'; // Required for Stripe webhook raw parser
-//  Register Stripe webhook FIRST with raw body parser
-// app.use('/api/v1/payment/webhook', bodyParser.raw({ type: 'application/json' }));
 
-// app.use((req, res, next) => {
-//   if (req.originalUrl === '/api/v1/payment/webhook') {
-//     next(); // laisser le webhook gérer son raw body
-//   } else {
-//     express.json()(req, res, next); // parser JSON normalement
-//   }
-// });
+
 
 // Webhook Stripe AVANT tout
 app.post(
@@ -56,9 +47,16 @@ app.use('/api/v1', paymentRoutes)
 app.use(errorMiddleware)
 
 
-const server = app.listen(process.env.PORT, () => {
-    console.log(`Le serveur est lancé sur le port : ${process.env.PORT} dans ${process.env.NODE_ENV}`)
-})
+// const server = app.listen(process.env.PORT, () => {
+//     console.log(`Le serveur est lancé sur le port : ${process.env.PORT} dans ${process.env.NODE_ENV}`)
+// }) 
+
+
+const PORT = process.env.PORT || 4000;
+
+const server = app.listen(PORT, () => {
+    console.log(`Le serveur est lancé sur le port : ${PORT} dans ${process.env.NODE_ENV}`);
+});
 
 
 // Gestion des promesses non gérés
