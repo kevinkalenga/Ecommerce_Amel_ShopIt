@@ -7,7 +7,7 @@ import { setIsAuthenticated, setUser, setLoading } from '../features/userSlice'
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery:fetchBaseQuery({
-        baseUrl: "/api/v1",
+        baseUrl:process.env.REACT_APP_API_URL,
         // baseUrl: "http://localhost:4000/api/v1",
         credentials: "include"
 
