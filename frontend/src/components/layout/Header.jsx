@@ -12,9 +12,9 @@ const Header = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  // const {user} = useSelector(state => state.auth);
-  // console.log(user)
-   const user = data?.user;
+  const {user} = useSelector(state => state.auth);
+  console.log(user)
+  //  const user = data?.user;
   
   
   const {cartItems} = useSelector((state) => state.cart)
