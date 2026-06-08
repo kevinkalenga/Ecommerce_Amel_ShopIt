@@ -6,7 +6,7 @@ import MetaData from '../layout/MetaData'
 import { useSelector } from 'react-redux';
 
 const Login = () => {
-   const {isAuthenticated} = useSelector((state) => state.auth)
+  //  const {isAuthenticated} = useSelector((state) => state.auth)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
@@ -15,12 +15,12 @@ const Login = () => {
 
 
   
-  useEffect(() => {
-    if(isAuthenticated) {
-      navigate('/')
-    }
+  // useEffect(() => {
+  //   if(isAuthenticated) {
+  //     navigate('/')
+  //   }
    
-  }, [isAuthenticated, error, navigate])
+  // }, [isAuthenticated, error, navigate])
 
 
   
