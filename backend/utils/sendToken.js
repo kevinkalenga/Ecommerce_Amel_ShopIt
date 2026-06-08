@@ -18,29 +18,22 @@
 // } 
 
 
+
 export default (user, statusCode, res) => {
   const token = user.getJwtToken();
 
   const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
 
-  const options = {
+  res.cookie("token", token, {
     httpOnly: true,
+    secure: true,        // 🔥 obligatoire HTTPS
+    sameSite: "none",    // 🔥 obligatoire cross-site
+    expires: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
+  });
 
-    // 🔥 IMPORTANT POUR VERCEL + RENDER
-    secure: true,
-    sameSite: "none",
-
-    expires: new Date(
-      Date.now() + days * 24 * 60 * 60 * 1000
-    ),
-  };
-
-  res
-    .status(statusCode)
-    .cookie("token", token, options)
-    .json({
-      success: true,
-      token,
-      user,
-    });
+  res.status(statusCode).json({
+    success: true,
+    token,
+    user,
+  });
 };
