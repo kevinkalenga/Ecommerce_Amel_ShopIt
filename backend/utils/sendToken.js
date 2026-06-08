@@ -19,27 +19,29 @@
 
 
 export default (user, statusCode, res) => {
-  // Génération du token JWT
-  const token = user.getJwtToken();
+    // Création du JWT
+    const token = user.getJwtToken();
 
-  // Conversion safe de la variable d'environnement
-  const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
+    const days = Number(process.env.COOKIE_EXPIRES_TIME || 7);
 
-  // Options cookie
-  const options = {
-    httpOnly: true,
-    expires: new Date(
-      Date.now() + days * 24 * 60 * 60 * 1000
-    ),
-  };
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "PRODUCTION",
+        sameSite:
+            process.env.NODE_ENV === "PRODUCTION"
+                ? "none"
+                : "lax",
+        expires: new Date(
+            Date.now() + days * 24 * 60 * 60 * 1000
+        ),
+    };
 
-  // Envoi cookie + réponse
-  res
-    .status(statusCode)
-    .cookie("token", token, options)
-    .json({
-      success: true,
-      token,
-      user,
-    });
+    res
+        .status(statusCode)
+        .cookie("token", token, options)
+        .json({
+            success: true,
+            token,
+            user,
+        });
 };
