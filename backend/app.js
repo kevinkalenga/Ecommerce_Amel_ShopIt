@@ -2,7 +2,8 @@ import express from "express"
 import path from 'path'
 import cors from "cors"
 import dotenv from "dotenv"
-dotenv.config({path: 'backend/config/config.env'})
+dotenv.config();
+// dotenv.config({path: 'backend/config/config.env'})
 import productRoutes from "./routes/productRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
 import orderRoutes from "./routes/orderRoutes.js"
@@ -21,6 +22,17 @@ connectedDatabase();
 
 
 
+const PORT = process.env.PORT || 4000;
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "*",
+    credentials: true
+}));
+
+// const server = app.listen(PORT, () => {
+//     console.log(`Le serveur est lancé sur le port : ${PORT} dans ${process.env.NODE_ENV}`);
+// });
+
 
 
 // Webhook Stripe AVANT tout
@@ -33,10 +45,12 @@ app.post(
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true
-}))
+// app.use(cors({
+//     origin: "http://localhost:3000",
+//     credentials: true
+// })) 
+
+
 
 app.use('/api/v1', productRoutes)
 app.use('/api/v1', authRoutes)
@@ -47,16 +61,17 @@ app.use('/api/v1', paymentRoutes)
 app.use(errorMiddleware)
 
 
+const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+
 // const server = app.listen(process.env.PORT, () => {
 //     console.log(`Le serveur est lancé sur le port : ${process.env.PORT} dans ${process.env.NODE_ENV}`)
 // }) 
 
 
-const PORT = process.env.PORT || 4000;
 
-const server = app.listen(PORT, () => {
-    console.log(`Le serveur est lancé sur le port : ${PORT} dans ${process.env.NODE_ENV}`);
-});
 
 
 // Gestion des promesses non gérés
