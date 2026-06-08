@@ -36,13 +36,22 @@ const userSchema = new mongoose.Schema({
 })
 
 // Encrypte de password before saving the user (npx create-react-app .) and bootsrap cdn with fontawesome script under
-userSchema.pre("save", async function(next){
- if(!this.isModified("password")) {
-    return next()
- }
+// userSchema.pre("save", async function(next){
+//  if(!this.isModified("password")) {
+//     return next()
+//  }
 
- this.password = await bcrypt.hash(this.password, 10)
-})
+//  this.password = await bcrypt.hash(this.password, 10)
+// }) 
+
+userSchema.pre("save", async function(next){
+    if(!this.isModified("password")) {
+        return next();
+    }
+
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 // retourne jwt
 
@@ -53,8 +62,16 @@ userSchema.methods.getJwtToken = function() {
 }
 
 // Comparaison de mpd 
+// userSchema.methods.comparePassword = async function(enteredPassword) {
+//     return await bcrypt.compare(enteredPassword, this.password)
+// }
+
 userSchema.methods.comparePassword = async function(enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password)
+    if (!this.password) {
+        throw new Error("Password not found in DB for this user");
+    }
+
+    return await bcrypt.compare(enteredPassword, this.password);
 }
 
 
