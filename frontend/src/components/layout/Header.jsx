@@ -8,13 +8,16 @@ import { logoutUser } from '../../redux/features/userSlice';
 
 const Header = () => {
   const [logout] = useLazyLogoutQuery()
-  const {isLoading} = useGetMeQuery();
+  const {data, isLoading} = useGetMeQuery();
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {user} = useSelector(state => state.auth);
-  console.log(user)
-   const {cartItems} = useSelector((state) => state.cart)
+  // const {user} = useSelector(state => state.auth);
+  // console.log(user)
+   const user = data?.user;
+  
+  
+  const {cartItems} = useSelector((state) => state.cart)
   
   const logoutHandler = async () => {
     try {
