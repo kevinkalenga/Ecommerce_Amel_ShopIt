@@ -14,14 +14,18 @@
 
 import mongoose from "mongoose";
 
-export const connectedDatabase = () => {
+export const connectedDatabase = async () => {
    const DB_URI = process.env.DB_URI;
 
    if (!DB_URI) {
-      throw new Error("DB_URI manquant dans les variables d'environnement");
+      throw new Error("MONGO_URI manquant dans les variables d'environnement");
    }
 
-   mongoose.connect(DB_URI).then((con) => {
-      console.log(`Connexion avec le host: ${con.connection.host}`);
-   });
+   try {
+      const con = await mongoose.connect(DB_URI);
+      console.log(`MongoDB connecté: ${con.connection.host}`);
+   } catch (error) {
+      console.error("Erreur MongoDB:", error.message);
+      process.exit(1);
+   }
 };
