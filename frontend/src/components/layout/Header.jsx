@@ -1,13 +1,13 @@
 import React from 'react'
 import Search from './Search'
 import { useGetMeQuery } from '../../redux/api/userApi'
-import { useLazyLogoutQuery } from '../../redux/api/authApi';
+import { useLogoutMutation } from '../../redux/api/authApi';
 import { useSelector, useDispatch } from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom'
 import { logoutUser } from '../../redux/features/userSlice';
 
 const Header = () => {
-  const [logout] = useLazyLogoutQuery()
+  const [logout] = useLogoutMutation();
   const {data, isLoading} = useGetMeQuery();
   const navigate = useNavigate()
   const dispatch = useDispatch()

@@ -24,9 +24,20 @@ connectedDatabase();
 
 const PORT = process.env.PORT || 4000;
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://ecommerce-amel-shop-it-gilt.vercel.app"
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 
 // const server = app.listen(PORT, () => {

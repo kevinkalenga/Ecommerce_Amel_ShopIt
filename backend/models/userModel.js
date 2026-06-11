@@ -55,11 +55,19 @@ userSchema.pre("save", async function(next){
 
 // retourne jwt
 
-userSchema.methods.getJwtToken = function() {
-    return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_TIME
-    })
-}
+// userSchema.methods.getJwtToken = function() {
+//     return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
+//         expiresIn: "7d"
+//     })
+// }
+
+userSchema.methods.getJwtToken = function () {
+    return jwt.sign(
+        { id: this._id },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
+};
 
 // Comparaison de mpd 
 // userSchema.methods.comparePassword = async function(enteredPassword) {
