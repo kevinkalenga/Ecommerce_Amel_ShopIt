@@ -6,7 +6,7 @@ const sendToken = (user, statusCode, res) => {
   const options = {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
-    sameSite: "none",
+     sameSite: "lax",
     secure: true,
     path: "/"
   };
