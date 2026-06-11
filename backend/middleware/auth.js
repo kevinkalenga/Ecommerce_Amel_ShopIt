@@ -8,7 +8,8 @@ import User from '../models/userModel.js'
 
 export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     const token = req.cookies?.token 
-
+     console.log("COOKIES RECEIVED:", req.cookies);
+     console.log("HEADERS:", req.headers.origin);
      if(!token) {
         return next(new ErrorHandler("Login first to access this resource", 401))
      }

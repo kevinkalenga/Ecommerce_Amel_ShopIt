@@ -16,7 +16,8 @@ import { stripeWebhookHandler } from "./controllers/paymentController.js";
 
 const app = express();
 
-
+app.use(express.json())
+app.use(cookieParser())
 
 connectedDatabase();
 
@@ -30,14 +31,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
+  origin: [
+    "http://localhost:3000",
+    "https://ecommerce-amel-shop-it-gilt.vercel.app"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 // const server = app.listen(PORT, () => {
@@ -54,8 +54,7 @@ app.post(
 );
 
 
-app.use(express.json())
-app.use(cookieParser())
+
 // app.use(cors({
 //     origin: "http://localhost:3000",
 //     credentials: true
