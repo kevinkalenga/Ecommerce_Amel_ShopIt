@@ -8,17 +8,19 @@ export const orderApi = createApi({
     reducerPath: "orderApi",
     baseQuery:fetchBaseQuery({
         baseUrl:process.env.REACT_APP_API_URL,
+          
+        credentials: "include"
         
          
-       prepareHeaders: (headers, { getState }) => {
-        console.log("FULL STATE:", getState());
-        const token = getState().auth?.user?.token;
-         console.log("User token in prepareHeaders:", token);
-        if (token) {
-          headers.set("Authorization", `Bearer ${token}`);
-        }
-      return headers;
-    },
+    //    prepareHeaders: (headers, { getState }) => {
+    //     console.log("FULL STATE:", getState());
+    //     const token = getState().auth?.user?.token;
+    //      console.log("User token in prepareHeaders:", token);
+    //     if (token) {
+    //       headers.set("Authorization", `Bearer ${token}`);
+    //     }
+    //   return headers;
+    // },
         
 
     }),
