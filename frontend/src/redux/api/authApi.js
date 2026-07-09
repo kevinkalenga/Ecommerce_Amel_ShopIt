@@ -33,25 +33,35 @@ export const authApi = createApi({
                }
             },
         }),
+
         login: builder.mutation({
             query(body){
                return {
-                 url: '/login',
-                 method:'POST',
-                 body,
-               }
-              
-            },
-            async onQueryStarted(args, {dispatch, queryFulfilled}) {
-               try {
-                 const {data} = await queryFulfilled;
-                 await dispatch(userApi.endpoints.getMe.initiate(null))
-               } catch (error) {
-                 
-                  console.log(error)
+                  url: '/login',
+                  method:'POST',
+                  body,
                }
             },
         }),
+      //   login: builder.mutation({
+      //       query(body){
+      //          return {
+      //            url: '/login',
+      //            method:'POST',
+      //            body,
+      //          }
+              
+      //       },
+      //       async onQueryStarted(args, {dispatch, queryFulfilled}) {
+      //          try {
+      //            const {data} = await queryFulfilled;
+      //            await dispatch(userApi.endpoints.getMe.initiate(null))
+      //          } catch (error) {
+                 
+      //             console.log(error)
+      //          }
+      //       },
+      //   }),
         logout: builder.mutation({
             query: () => ({
                url: '/logout',

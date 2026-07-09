@@ -6,11 +6,14 @@ import Footer from './components/layout/Footer'
 import Header from './components/layout/Header'
 import useUserRoutes from './components/routes/userRoutes'
 import useAdminRoutes from './components/routes/adminRoutes'
+import { useGetMeQuery } from './redux/api/userApi';
 
 
 
 
 function App() {
+     // RESTORE SESSION AU START
+     useGetMeQuery();
   
   const userRoutes = useUserRoutes();
   const adminRoutes = useAdminRoutes()

@@ -3,14 +3,16 @@ import {useLoginMutation} from '../../redux/api/authApi';
 import toast from 'react-hot-toast'
 import {Link, useNavigate} from 'react-router-dom';
 import MetaData from '../layout/MetaData'
-import { useSelector } from 'react-redux';
+import { useSelector,  useDispatch } from 'react-redux';
+
+import { setCredentials } from '../../redux/features/userSlice';
 
 const Login = () => {
   const {isAuthenticated} = useSelector((state) => state.auth)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
-
+  const dispatch = useDispatch();
   const [login, {isLoading, error}] = useLoginMutation()
 
   
@@ -23,30 +25,49 @@ const Login = () => {
   }, [isAuthenticated, error, navigate])
 
 
-  
+  const submitHandler = async (e) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    toast.error("Email and password are required");
+    return;
+  }
+
+  try {
+    const res = await login({ email, password }).unwrap();
+     console.log("LOGIN RESPONSE :", res);
+    //  IMPORTANT : mettre Redux à jour
+    dispatch(setCredentials(res));
+
+    toast.success("Login successfully");
+    navigate("/");
+  } catch (err) {
+    toast.error(err?.data?.message || "Invalid credentials");
+  }
+};
   
   
  
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  // const submitHandler = async (e) => {
+  //   e.preventDefault();
 
-    if (!email || !password) {
-        toast.error("Email and password are required");
-      return;
-    }
+  //   if (!email || !password) {
+  //       toast.error("Email and password are required");
+  //     return;
+  //   }
 
     
-    try {
-       await login({ email, password }).unwrap();
+  //   try {
+  //      await login({ email, password }).unwrap();
 
-       toast.success("Login successfully");
-       navigate("/");
+  //      toast.success("Login successfully");
+  //      navigate("/");
 
-     } catch (err) {
-        toast.error(err?.data?.message || "Invalid credentials");
-     }
-  }
+  //    } catch (err) {
+  //       toast.error(err?.data?.message || "Invalid credentials");
+  //    }
+  // }
   
   
   return (

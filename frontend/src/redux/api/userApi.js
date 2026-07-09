@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 
-import { setIsAuthenticated, setUser, setLoading } from '../features/userSlice'
+ import { setIsAuthenticated, setUser, setLoading } from '../features/userSlice'
+// import { setIsAuthenticated, setUser } from '../features/userSlice'
 
 
 // creation de l'api
@@ -25,7 +26,8 @@ export const userApi = createApi({
                  dispatch(setIsAuthenticated(true))
                  dispatch(setLoading(false))
                } catch (error) {
-                  dispatch(setLoading(false))
+                //  dispatch(setIsAuthenticated(false));
+                 dispatch(setLoading(false))
                   console.log(error)
                }
             },

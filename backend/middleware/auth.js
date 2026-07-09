@@ -16,10 +16,39 @@ export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
      const decoded = jwt.verify(token, process.env.JWT_SECRET) 
 
+    
+
      req.user = await User.findById(decoded.id)
 
      next();
 })
+
+// export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+//     const token = req.cookies?.token;
+
+//     console.log("COOKIES RECEIVED:", req.cookies);
+
+//     if (!token) {
+//         return next(new ErrorHandler("Login first to access this resource", 401));
+//     }
+
+//     let decoded;
+//     try {
+//         decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     } catch (err) {
+//         return next(new ErrorHandler("Invalid or expired token", 401));
+//     }
+
+//     const user = await User.findById(decoded.id);
+
+//     if (!user) {
+//         return next(new ErrorHandler("User not found", 404));
+//     }
+
+//     req.user = user;
+
+//     next();
+// });
 
 export const authorizeRoles = (...roles) => {
    return (req, res, next) => {

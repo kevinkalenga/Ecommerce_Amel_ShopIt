@@ -1,6 +1,6 @@
 import React from 'react'
 import Search from './Search'
-import { useGetMeQuery } from '../../redux/api/userApi'
+// import { useGetMeQuery} from "../../redux/api/userApi"
 import { useLogoutMutation } from '../../redux/api/authApi';
 import { useSelector, useDispatch } from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom'
@@ -8,14 +8,16 @@ import { logoutUser } from '../../redux/features/userSlice';
 
 const Header = () => {
   const [logout] = useLogoutMutation();
-  const {data, isLoading} = useGetMeQuery();
+ 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  // const { data: user } = useGetMeQuery();
+  // const { user, isAuthenticated} = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
-  const {user} = useSelector(state => state.auth);
-  console.log(user)
-  //  const user = data?.user;
-  
+ 
+
+
   
   const {cartItems} = useSelector((state) => state.cart)
   
@@ -28,6 +30,7 @@ const Header = () => {
       console.error('Signout error', err)
     }
   }
+  
   
   
   return (
@@ -65,8 +68,12 @@ const Header = () => {
             <span>{user.name}</span>
           </button>
           <div className="dropdown-menu w-100" aria-labelledby="dropDownMenuButton">
-            
-            {user?.role === 'admin' && <Link className="dropdown-item" to="/admin/dashboard"> Dashboard </Link>}
+              {user?.role === 'admin' && (
+                <Link className="dropdown-item" to="/admin/dashboard">
+                  Dashboard
+                </Link>
+              )}
+            {/* {user?.role === 'admin' && <Link className="dropdown-item" to="/admin/dashboard"> Dashboard </Link>} */}
 
             <Link className="dropdown-item" to="/me/orders"> Orders </Link>
 

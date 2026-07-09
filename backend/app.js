@@ -16,20 +16,29 @@ import { stripeWebhookHandler } from "./controllers/paymentController.js";
 
 const app = express();
 
-app.use(express.json())
-app.use(cookieParser())
+app.set("trust proxy", 1);
 
-app.use((req, res, next) => {
-  console.log("ORIGIN:", req.headers.origin);
-  console.log("COOKIE HEADER:", req.headers.cookie);
-  next();
-});
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "https://ecommerce-amel-shop-it-gilt.vercel.app"
+// ];
 
-connectedDatabase();
+// app.use(cors({
+//   origin: "https://ecommerce-amel-shop-it-gilt.vercel.app",
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
-
-
-const PORT = process.env.PORT || 4000;
+// app.use(cors({
+//   origin: [
+//     "http://localhost:3000",
+//     "https://ecommerce-amel-shop-it-gilt.vercel.app"
+//   ],
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -37,14 +46,39 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://ecommerce-amel-shop-it-gilt.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+app.use(express.json())
+app.use(cookieParser())
+
+
+
+
+// app.use((req, res, next) => {
+//   console.log("ORIGIN:", req.headers.origin);
+//   console.log("COOKIE HEADER:", req.headers.cookie);
+//   next();
+// });
+
+connectedDatabase();
+
+
+
+const PORT = process.env.PORT || 4000;
+
+
+
+
 
 // const server = app.listen(PORT, () => {
 //     console.log(`Le serveur est lancé sur le port : ${PORT} dans ${process.env.NODE_ENV}`);
